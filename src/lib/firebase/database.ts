@@ -1,12 +1,11 @@
-// import { Output } from '$lib/stores/IO';
 import { firebaseApp } from './config';
-import { getDatabase, ref, onValue, update } from 'firebase/database';
+import { getDatabase, ref, update } from 'firebase/database';
 
 const firebase = getDatabase(firebaseApp);
 
-const outputRef = ref(firebase, 'output')
-const inputOutputRef = ref(firebase, 'input_output')
-const inputRef = ref(firebase, 'input')
+export const outputRef = ref(firebase, 'output')
+export const inputOutputRef = ref(firebase, 'input_output')
+export const inputRef = ref(firebase, 'input')
 
 export function updateLED(isOn: boolean) {
     /* Updates the value of `output.led_is_on` in real-time DB. */
@@ -61,18 +60,3 @@ export function updateCamera(isOn: boolean) {
 
 	update(inputRef, updateValue);
 }
-
-onValue(outputRef, (snapshot) => {
-  const data = snapshot.val();
-  console.log(data)
-});
-
-onValue(inputOutputRef, (snapshot) => {
-  const data = snapshot.val();
-  console.log(data)
-});
-
-onValue(inputRef, (snapshot) => {
-  const data = snapshot.val();
-  console.log(data)
-});
