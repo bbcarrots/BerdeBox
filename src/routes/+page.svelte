@@ -1,14 +1,28 @@
 <script lan='ts'>
-	import { writeLed } from "$lib/firebase/database";
+	import { updateLED, updateMainLock } from "$lib/firebase/database";
 
     let isOnLed = false;
+    let isOnMainLock = false;
+    let isOnButton = false;
 
-    function handleClick() {
+    function handleOutput() {
         isOnLed = !isOnLed
-        writeLed(isOnLed)
+        updateLED(isOnLed)
+    }
+
+    function handleInputOutput() {
+        isOnMainLock = !isOnMainLock
+        updateMainLock(isOnMainLock)
+    }
+
+    function handleInput() {
+        isOnButton = !isOnButton
+        updateLED(isOnButton)
     }
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<button on:click={handleClick}>ClickMe!</button>
+<button on:click={handleOutput}>Button 1!</button>
+<button on:click={handleInputOutput}>Button 2!</button>
+<button on:click={handleInput}>Button 3!</button>
