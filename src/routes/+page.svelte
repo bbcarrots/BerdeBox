@@ -1,5 +1,12 @@
 <script lan="ts">
-	import { inputOutputRef, inputRef, outputRef, updateButton, updateLED, updateMainLock } from '$lib/firebase/database';
+	import {
+		inputOutputRef,
+		inputRef,
+		outputRef,
+		updateButton,
+		updateLED,
+		updateMainLock
+	} from '$lib/firebase/database';
 	import { InputOutput, Output, Input } from '$lib/stores/IO';
 	import { onValue } from '@firebase/database';
 
@@ -22,23 +29,23 @@
 		updateButton(isOnButton);
 	}
 
-    onValue(outputRef, (snapshot) => {
-        const data = snapshot.val();
-        $Output = data
-        console.log($Output)
-    })
+	onValue(outputRef, (snapshot) => {
+		const data = snapshot.val();
+		$Output = data;
+		console.log($Output);
+	});
 
-    onValue(inputOutputRef, (snapshot) => {
-        const data = snapshot.val();
-        $InputOutput = data
-        console.log($InputOutput)
-    })
+	onValue(inputOutputRef, (snapshot) => {
+		const data = snapshot.val();
+		$InputOutput = data;
+		console.log($InputOutput);
+	});
 
-    onValue(inputRef, (snapshot) => {
-        const data = snapshot.val();
-        $Input = data
-        console.log($Input)
-    })
+	onValue(inputRef, (snapshot) => {
+		const data = snapshot.val();
+		$Input = data;
+		console.log($Input);
+	});
 </script>
 
 <h1>Welcome</h1>
