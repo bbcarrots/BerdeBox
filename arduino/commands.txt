@@ -1,0 +1,12 @@
+./mosquitto_sub -h test.mosquitto.org -t cs145/B0x0Labs/out
+./mosquitto_pub -h test.mosquitto.org -t cs145/B0x0Labs/in -m "kaya ko pa"
+192.168.68.57
+
+./mosquitto_sub -h 192.168.68.57 -t cs145/IoT247/out
+./mosquitto_sub -h 192.168.68.57 -t cs145/B0x0Labs/out
+./mosquitto_sub -h 192.168.68.57 -t cs145/IoT247/RAW_MORSE/+
+
+./mosquitto_pub -h 192.168.68.57 -t cs145/B0x0Labs/out -m ''
+
+
+----- -..- -----
