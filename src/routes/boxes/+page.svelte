@@ -12,7 +12,6 @@
     }
 
     onMount(() => {
-        console.log('Component mounted');
         getImage('delivery_man.jpeg').then(url => {
             src = url;
         });
