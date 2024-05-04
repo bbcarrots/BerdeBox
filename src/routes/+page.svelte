@@ -48,8 +48,6 @@
 	});
 </script>
 
-<h1>Welcome</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 <button on:click={handleOutput}>Button 1!</button>
 <button on:click={handleInputOutput}>Button 2!</button>
 <button on:click={handleInput}>Button 3!</button>
