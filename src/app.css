@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 h1 {
 	font-size: 57px;
 	font-weight: 700;
@@ -34,7 +33,7 @@ h5 {
 }
 
 p {
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 300;
 	line-height: 140%;
 }
