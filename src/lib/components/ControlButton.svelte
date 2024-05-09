@@ -31,7 +31,7 @@
     on:mouseup={handleMouseUp} 
     class:holding={holding}
 >
-    <div class="grid border w-[100px] h-[100px] items-center justify-center">
+    <div class="grid border w-full h-[100px] items-center justify-center">
         <h5> {boxType} </h5>
         <p> Hold to open </p>
     </div>    

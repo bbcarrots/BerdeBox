@@ -5,7 +5,7 @@
     export let message = 'MailBox doorbell was rang';
 </script>
 
-<button on:click class="min-h-[250px] rounded-[15px] overflow-hidden bg-white -py-10">
+<button on:click class="w-full h-full min-h-[250px] rounded-[15px] overflow-hidden bg-white -py-10">
     <div class="flex items-center relative w-full h-full">
         {#if src == null} 
         <!-- Empty State -->
