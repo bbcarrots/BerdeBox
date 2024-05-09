@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import '../app.css';
+	import { getImage } from "$lib/firebase/storage";
+	import { ImageURLs } from '$lib/stores/IO';
 
 	// async function detectSWUpdate(){
 	// 	const registration = await navigator.serviceWorker.ready;
@@ -21,6 +23,20 @@
 	// onMount(() => {
 	// 	detectSWUpdate();
 	// })
+
+	
+    //todo: update in the future to get all of the images in a folder
+    onMount(() => {
+        getImage('delivery_man.jpeg').then(url => {
+            if (url !== null) { 
+                const currentURLs = $ImageURLs;
+
+                const updatedURLs = [...currentURLs, url];
+
+                ImageURLs.set(updatedURLs);
+            }
+        });
+    });
 </script>
 
 <body class="bg-[#EEF2F5]">
