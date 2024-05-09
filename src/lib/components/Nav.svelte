@@ -3,19 +3,20 @@
 
     $: activeUrl = $page.url.pathname;
 
-    const activeClasses = 'bg-black text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2'
-    const inactiveClasses = 'border border-black font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2'
+    const activeClasses = 'bg-bb-black text-white font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2'
+    const inactiveClasses = 'bg-white font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2'
 </script>
 
 <div>
     <a href="/boxes">
-        <button type="button" class="{activeUrl === '/boxes' ? activeClasses : inactiveClasses}">
-            Boxes
+        <button 
+            type="button" class="{activeUrl === '/boxes' ? activeClasses : inactiveClasses}">
+            <p>Boxes</p>
         </button>
     </a>
     <a href="/modules">
         <button type="button" class="{activeUrl === '/modules' ? activeClasses : inactiveClasses}">
-            Modules
+            <p>Modules</p>
         </button>
     </a>
 </div>
