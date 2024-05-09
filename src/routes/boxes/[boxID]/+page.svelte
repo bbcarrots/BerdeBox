@@ -3,10 +3,64 @@
 	import ControlButton from '$lib/components/ControlButton.svelte';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import { ImageURLs } from '$lib/stores/IO';
+	import Log from '$lib/components/Log.svelte';
 	import { Icon, XMark } from 'svelte-hero-icons';
+	import { type log } from '$lib/utils/types';
+
 	const boxID = Number($page.params.boxID);
 
 	let isControl: boolean = true;
+
+	let logs: log[] = [
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'alert'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'error'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		},
+		{
+			imageURL: $ImageURLs[0],
+			datetime: new Date(),
+			message: 'MailBox doorbell was pressed',
+			status: 'success'
+		}
+	];
 
 	function openBox() {
 		console.log('action!');
@@ -16,7 +70,7 @@
 	const tabbarInactiveClasses = 'p-3 m-2';
 </script>
 
-<section class="h-screen">
+<section class="h-screen max-h-[screen] overflow-hidden">
 	<!-- header -->
 	<div class="flex items-center justify-between p-4">
 		<div></div>
@@ -59,15 +113,25 @@
 
 			<!-- tabbar content -->
 			<div
-				class="grid row-span-6 md:row-span-9 bg-white grid-cols-2 items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 gap-4 w-full"
+				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full"
 			>
 				{#if isControl}
-					<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
-					<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
-					<ControlButton boxType={'Cashbox 2'} open={false} on:held={openBox}></ControlButton>
-					<ControlButton boxType={'Cashbox 3'} open={true} on:held={openBox}></ControlButton>
+					<span class="grid h-full gap-4 grid-cols-2">
+						<ControlButton boxType={'Mailbox 1'} open={false} on:held={openBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 2'} open={false} on:held={openBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 3'} open={true} on:held={openBox}></ControlButton>
+					</span>
 				{:else}
-					Logs
+					<div class="h-full overflow-auto overflow-y-scroll">
+						{#each logs as log, index}
+							{#if index === 0}
+								<Log {log} selected={true} />
+							{:else}
+								<Log {log} selected={false} />
+							{/if}
+						{/each}
+					</div>
 				{/if}
 			</div>
 		</div>
