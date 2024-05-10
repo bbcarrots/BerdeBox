@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 {
+	font-size: 57px;
+	font-weight: 700;
+	line-height: 70px;
+}
+
+h2 {
+	font-size: 45px;
+	font-weight: 600;
+	line-height: 52.9px;
+}
+
+h3 {
+	font-size: 36px;
+	font-weight: 600;
+	line-height: 42.3px;
+}
+
+h4 {
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 140%;
+}
+
+h5 {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 155%;
+}
+
+p {
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 140%;
+}
+
+h6 {
+	font-size: 12px;
+	font-weight: 300;
+	line-height: 11.4px;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #cecece;
+	border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #cecece;
+}
+
+select {
+	-webkit-padding-end: 30px !important;
+	-webkit-padding-start: 10px !important;
+}
