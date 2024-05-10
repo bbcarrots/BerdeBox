@@ -6,6 +6,7 @@
 	import Log from '$lib/components/Log.svelte';
 	import { Icon, XMark } from 'svelte-hero-icons';
 	import { type log } from '$lib/utils/types';
+	import { patch } from 'semver';
 
 	const boxID = Number($page.params.boxID);
 
@@ -62,8 +63,20 @@
 		}
 	];
 
-	function openBox() {
-		console.log('action!');
+	async function handleOpenBox() {
+        /* Handles Open Box requests by sending a PATCH request. */
+
+        const payload = { led_is_on : true };
+
+        const response = await fetch('../../api/output', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+        console.log(await response.json());
 	}
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
@@ -117,10 +130,10 @@
 			>
 				{#if isControl}
 					<span class="grid h-full gap-4 grid-cols-2">
-						<ControlButton boxType={'Mailbox 1'} open={false} on:held={openBox}></ControlButton>
-						<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
-						<ControlButton boxType={'Cashbox 2'} open={false} on:held={openBox}></ControlButton>
-						<ControlButton boxType={'Cashbox 3'} open={true} on:held={openBox}></ControlButton>
+						<ControlButton boxType={'Mailbox 1'} open={false} on:held={handleOpenBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 1'} open={false} on:held={handleOpenBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 2'} open={false} on:held={handleOpenBox}></ControlButton>
+						<ControlButton boxType={'Cashbox 3'} open={true} on:held={handleOpenBox}></ControlButton>
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
