@@ -45,7 +45,7 @@
 				{/if}
 
 				<!-- Image -->
-				<img class="object-cover w-full h-full" {src} alt="preview" />
+				<img class=" aspect-video object-cover w-full h-full" {src} alt="preview" />
 			</div>
 		{/if}
 	</div>

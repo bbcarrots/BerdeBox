@@ -11,7 +11,7 @@
 			? 'rounded-[15px] bg-[#F1F5F9]'
 			: ''} grid gap-4 grid-cols-3 w-full p-2"
 	>
-		<img class="rounded-[10px] col-span-1" src={log.imageURL} alt="log" />
+		<img class="aspect-video object-cover rounded-[10px] col-span-1" src={log.imageURL} alt="log" />
 		<div class="grid col-span-2 items-center my-2">
 			<h6 class="text-left">{log.datetime.toLocaleString()}</h6>
 			<span class="flex items-center gap-1">
