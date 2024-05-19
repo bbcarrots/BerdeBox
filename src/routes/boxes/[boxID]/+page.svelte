@@ -2,74 +2,38 @@
 	import { page } from '$app/stores';
 	import ControlButton from '$lib/components/ControlButton.svelte';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
-	import { ImageURLs } from '$lib/stores/IO';
 	import Log from '$lib/components/Log.svelte';
 	import { Icon, XMark } from 'svelte-hero-icons';
-	import { type log } from '$lib/utils/types';
+	import { Logs } from '$lib/stores/IO';
+	import { onMount } from 'svelte';
 
 	const boxID = Number($page.params.boxID);
 
 	let isControl: boolean = true;
-
-	let logs: log[] = [
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'alert'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'error'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		},
-		{
-			imageURL: $ImageURLs[0],
-			datetime: new Date(),
-			message: 'MailBox doorbell was pressed',
-			status: 'success'
-		}
-	];
+	let selectedLogIndex: Number = 0;
+	let src: string;
+	let datetime: Date;
+	let message: string;
+	let status: string;
 
 	function openBox() {
 		console.log('action!');
 	}
 
-	let selected: Number = 0;
-	function handleLogClick(index: Number) {
-		selected = index;
+	function handleLogClick(index: number) {
+		selectedLogIndex = index;
+		src = $Logs[index].imageURL;
+		datetime = $Logs[index].datetime;
+		message = $Logs[index].message;
+		status = $Logs[index].status;
 	}
+
+	onMount(() => {
+		src = $Logs[0].imageURL;
+		datetime = $Logs[0].datetime;
+		message = $Logs[0].message;
+		status = $Logs[0].status;
+	});
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
 	const tabbarInactiveClasses = 'p-3 m-2';
@@ -89,7 +53,7 @@
 	<div class="grid grid-cols-1 md:grid-cols-5 h-[calc(100%-60px)] m-0 md:m-4 md:h-[90%]">
 		<!-- box preview -->
 		<div class="col-span-3 mb-4 md:mr-4">
-			<BoxPreview src={$ImageURLs}></BoxPreview>
+			<BoxPreview {src} {datetime} {message} {status}></BoxPreview>
 		</div>
 
 		<div class="grid grid-rows-7 md:col-span-2 md:grid-rows-10 w-full h-full">
@@ -118,7 +82,7 @@
 
 			<!-- tabbar content -->
 			<div
-				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full"
+				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full mt-2"
 			>
 				{#if isControl}
 					<span class="grid h-full gap-4 grid-cols-2">
@@ -129,8 +93,8 @@
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
-						{#each logs as log, index}
-							{#if index === selected}
+						{#each $Logs as log, index}
+							{#if index === selectedLogIndex}
 								<Log {log} selected={true} />
 							{:else}
 								<Log
