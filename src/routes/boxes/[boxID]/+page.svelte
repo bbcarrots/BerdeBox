@@ -66,6 +66,11 @@
 		console.log('action!');
 	}
 
+	let selected: Number = 0;
+	function handleLogClick(index: Number) {
+		selected = index;
+	}
+
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
 	const tabbarInactiveClasses = 'p-3 m-2';
 </script>
@@ -125,10 +130,16 @@
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
 						{#each logs as log, index}
-							{#if index === 0}
+							{#if index === selected}
 								<Log {log} selected={true} />
 							{:else}
-								<Log {log} selected={false} />
+								<Log
+									on:click={() => {
+										handleLogClick(index);
+									}}
+									{log}
+									selected={false}
+								/>
 							{/if}
 						{/each}
 					</div>
