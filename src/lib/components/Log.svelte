@@ -28,7 +28,7 @@
 						<Icon src={XCircle} solid size={'15px'} />
 					</span>
 				{/if}
-				<p>{log.message}</p>
+				<p class="text-left">{log.message}</p>
 			</span>
 		</div>
 	</div>
