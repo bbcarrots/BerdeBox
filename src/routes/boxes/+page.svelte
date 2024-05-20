@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Nav from '$lib/components/Nav.svelte';
-	import { Icon, ChevronLeft } from 'svelte-hero-icons';
+	import { Icon, ChevronLeft, Plus } from 'svelte-hero-icons';
 	import { Boxes } from '$lib/stores/IO';
 	import { initializeBox } from '$lib/utils/helperFunctions.js';
 	
@@ -21,7 +21,7 @@
 
 </script>
 
-<section class="h-screen max-h-[screen] overflow-hidden">
+<section class="h-calc([100%-20px]) max-h-screen {openCodeForm ? 'overflow-hidden' : ''}">
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
 		<div class="z-20 grid grid-cols-1 w-full h-screen bg-[#EEF2F5] absolute">
@@ -68,8 +68,18 @@
 				on:click={() => handleRoute(box.id)}
 			/>
 			{/each}
+			<button class="w-full h-full bg-white rounded-[15px] min-h-[250px]" 
+				on:click={() => {openCodeForm = true}}
+			>
+				<div class="flex flex-col items-center space-y-2">
+					<Icon src={Plus} solid size="36" />
+					<p>
+						Add a new BerdeBox
+					</p>
+				</div>
+			</button>
 		</section>
-		<button on:click={() => {openCodeForm = true}}>Add box</button>
+
 	</body>
 	
 </section>
