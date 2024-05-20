@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { getImage } from "$lib/firebase/storage";
-	import { ImageURLs } from '$lib/stores/IO';
+	import { getImages } from '$lib/firebase/storage';
+	import { Logs } from '$lib/stores/IO';
 
 	// async function detectSWUpdate(){
 	// 	const registration = await navigator.serviceWorker.ready;
@@ -24,19 +24,13 @@
 	// 	detectSWUpdate();
 	// })
 
-	
-    //todo: update in the future to get all of the images in a folder
-    onMount(() => {
-        getImage('delivery_man.jpeg').then(url => {
-            if (url !== null) { 
-                const currentURLs = $ImageURLs;
-
-                const updatedURLs = [...currentURLs, url];
-
-                ImageURLs.set(updatedURLs);
-            }
-        });
-    });
+	//todo: update in the future to get all of the images in a folder
+	onMount(() => {
+		//input the id and the date string
+		//to-do: make this unhardcoded
+		getImages(1, '05-19-2024');
+	});
+	console.log('Logs', $Logs);
 </script>
 
 <body class="bg-[#EEF2F5]">
@@ -46,7 +40,7 @@
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap');
 
-	:global(body){
-		font-family: "Familjen Grotesk", sans-serif;
+	:global(body) {
+		font-family: 'Familjen Grotesk', sans-serif;
 	}
 </style>
