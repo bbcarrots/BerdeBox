@@ -62,10 +62,6 @@
 		}
 	];
 
-	function openBox() {
-		console.log('action!');
-	}
-
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
 	const tabbarInactiveClasses = 'p-3 m-2';
 
