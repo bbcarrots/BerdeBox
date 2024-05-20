@@ -5,10 +5,13 @@ export async function initializeBox(id: number){
 	let logs = await getImages(id, '05-19-2024');
 	let reversedLogs = [...logs].reverse()
 
-	Boxes.set(	[{
-		id: 1,
-		logs: reversedLogs
-	}])
+    Boxes.update(currentBoxes => [
+        ...currentBoxes, 
+        {
+            id: id,
+            logs: reversedLogs
+        }
+    ]);
 }
 
 // this function takes in the action and the status from the filename
