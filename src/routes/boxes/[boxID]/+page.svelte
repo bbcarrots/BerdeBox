@@ -10,7 +10,6 @@
 	const boxID = Number($page.params.boxID);
 	$: reversedLogs = [...$Logs].reverse()
 
-
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
 	let src: string;
