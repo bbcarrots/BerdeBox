@@ -2,20 +2,26 @@
 	import { goto } from '$app/navigation';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Nav from '$lib/components/Nav.svelte';
-	import { Logs } from '$lib/stores/IO';
 	import { Icon, ChevronLeft } from 'svelte-hero-icons';
+	import { Boxes } from '$lib/stores/IO';
+	import { initializeBox } from '$lib/utils/helperFunctions.js';
+	
+	let openCodeForm = false;
 
-	let openCodeForm = true;
-
-	$: reversedLogs = [...$Logs].reverse()
 	// handle route for "multiple boxes" in the future
 	async function handleRoute(boxNum: number) {
 		goto(`/boxes/${boxNum}`);
 	}
+
+	let boxCode: string
+	async function handleSubmit(){
+		initializeBox(Number(boxCode));
+		openCodeForm = false;
+	}
+
 </script>
 
 <section class="h-screen max-h-[screen] overflow-hidden">
-
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
 		<div class="z-20 grid grid-cols-1 w-full h-screen bg-[#EEF2F5] absolute">
@@ -36,12 +42,10 @@
 							<label for="boxID">
 								<h4>Box Code</h4>
 							</label>
-							<input class="p-4 rounded-[10px]" type="text" id="boxID" name="boxID">
+							<input bind:value={boxCode} class="p-4 rounded-[10px]" type="text" id="boxID" name="boxID">
 						</div>
 						
-						<button class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center">
-							Add Box
-						</button>
+						<input on:click={handleSubmit} type="submit" value="Add Box" class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center"/>
 					</form>
 				</div>
 			</div>
@@ -55,14 +59,15 @@
 			<Nav></Nav>
 		</section>
 		<section class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
+			{#each $Boxes as box}
 			<BoxPreview
-				src={reversedLogs[0]?.imageURL}
-				message={reversedLogs[0]?.message}
-				status={reversedLogs[0]?.status}
-				datetime={reversedLogs[0]?.datetime}
-				on:click={() => handleRoute(1)}
+				src={box.logs[0]?.imageURL}
+				message={box.logs[0]?.message}
+				status={box.logs[0]?.status}
+				datetime={box.logs[0]?.datetime}
+				on:click={() => handleRoute(box.id)}
 			/>
-			<BoxPreview src={null} message={''} status={''} datetime={''} on:click={() => handleRoute(2)} />
+			{/each}
 		</section>
 		<button on:click={() => {openCodeForm = true}}>Add box</button>
 	</body>
