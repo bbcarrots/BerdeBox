@@ -25,13 +25,16 @@ export function updateSpeaker(audio: string) {
 	update(outputRef, updateValue);
 }
 
-export function updateMainLock(isOn: boolean) {
+export function updateMainLockOn(boxCode: string) {
     /* Updates the value of `input_output.main_lock_is_on` in real-time DB. */
     const updateValue = {
-		main_lock_is_on: isOn
+		main_lock_is_open: true,
+        lock_buzzer_is_on: true,
+        lock_led_is_on: true,
+        take_photo: true
 	}
 
-	update(inputOutputRef, updateValue);
+	return update(ref(firebase, boxCode + '/output'), updateValue)
 }
 
 export function updateCashLock(isOn: boolean, boxNumber: number) {

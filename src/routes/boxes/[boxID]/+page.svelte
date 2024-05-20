@@ -68,6 +68,36 @@
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
 	const tabbarInactiveClasses = 'p-3 m-2';
+
+	// --------------------------------------------------------
+    let mainLockIsOpen: boolean = false
+
+	const asyncTimeout = (ms: number) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, ms);
+		});
+	};
+
+	async function handleOpenMainLock() {
+		/* Handles Open Main Lock event from Main Lock button by sending a PATCH request
+        with payload requirement: boxCode. */
+
+		const payload = { boxCode: 'berdebox' + $page.params.boxID.toString() };
+
+        console.log("Main Lock should be open!")
+		const response = await fetch('../../api/output/mainlock', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+        console.log(await response.json())
+
+        await asyncTimeout(3000);
+        console.log("Main Lock should be locked again!")
+        mainLockIsOpen = false
+	}
 </script>
 
 <section class="h-screen max-h-[screen] overflow-hidden">
@@ -117,7 +147,8 @@
 			>
 				{#if isControl}
 					<span class="grid h-full gap-4 grid-cols-2">
-						<ControlButton boxType={'Mailbox 1'} open={false} on:held={openBox}></ControlButton>
+						<ControlButton boxType={'Mailbox 1'} bind:open={mainLockIsOpen} on:held={handleOpenMainLock}
+						></ControlButton>
 						<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
 						<ControlButton boxType={'Cashbox 2'} open={false} on:held={openBox}></ControlButton>
 						<ControlButton boxType={'Cashbox 3'} open={true} on:held={openBox}></ControlButton>
