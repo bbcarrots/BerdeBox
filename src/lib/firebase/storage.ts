@@ -41,7 +41,7 @@ function get_message(status: string, action: string) {
 }
 
 export async function getImages(mailbox_num: number, date: string) {
-	const mailboxPics = ref(storage, `Mailbox${mailbox_num}/${date}`);
+	const mailboxPics = ref(storage, `berdebox${mailbox_num}/${date}`);
 
 	try {
 		const response = await listAll(mailboxPics);
@@ -63,6 +63,7 @@ export async function getImages(mailbox_num: number, date: string) {
 
 			console.log(information);
 			return {
+				id: Number(information[0]),
 				imageURL: urls[index],
 				datetime: new Date(metadata.timeCreated),
 				message: get_message(information[1], information[2]),
