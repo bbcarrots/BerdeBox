@@ -4,12 +4,10 @@
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Log from '$lib/components/Log.svelte';
 	import { Icon, XMark } from 'svelte-hero-icons';
-	import { Logs } from '$lib/stores/IO';
+	import { Boxes } from '$lib/stores/IO';
 	import { onMount } from 'svelte';
 
-	const boxID = Number($page.params.boxID);
-	$: reversedLogs = [...$Logs].reverse()
-
+	const boxID = Number($page.params.boxID) -1;
 
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
@@ -20,17 +18,17 @@
 
 	function handleLogClick(index: number) {
 		selectedLogIndex = index;
-		src = reversedLogs[index].imageURL;
-		datetime = reversedLogs[index].datetime;
-		message = reversedLogs[index].message;
-		status = reversedLogs[index].status;
+		src = $Boxes[boxID].logs[index].imageURL;
+		datetime = $Boxes[boxID].logs[index].datetime;
+		message = $Boxes[boxID].logs[index].message;
+		status = $Boxes[boxID].logs[index].status;
 	}
 
 	onMount(() => {
-		src = reversedLogs[0]?.imageURL;
-		datetime = reversedLogs[0]?.datetime;
-		message = reversedLogs[0]?.message;
-		status =reversedLogs[0]?.status;
+		src = $Boxes[boxID].logs[0]?.imageURL;
+		datetime = $Boxes[boxID].logs[0]?.datetime;
+		message = $Boxes[boxID].logs[0]?.message;
+		status = $Boxes[boxID].logs[0]?.status;
 	});
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
@@ -166,7 +164,7 @@
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
-						{#each reversedLogs as log, index}
+						{#each $Boxes[boxID].logs as log, index}
 							{#if index === selectedLogIndex}
 								<Log {log} selected={true} />
 							{:else}
