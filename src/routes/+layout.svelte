@@ -26,6 +26,8 @@
 
 	//todo: update in the future to get all of the images in a folder
 	onMount(() => {
+		//input the id and the date string
+		//to-do: make this unhardcoded
 		getImages(1, '05-19-2024');
 	});
 	console.log('Logs', $Logs);

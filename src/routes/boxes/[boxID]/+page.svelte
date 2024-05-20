@@ -8,6 +8,8 @@
 	import { onMount } from 'svelte';
 
 	const boxID = Number($page.params.boxID);
+	$: reversedLogs = [...$Logs].reverse()
+
 
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
@@ -22,17 +24,17 @@
 
 	function handleLogClick(index: number) {
 		selectedLogIndex = index;
-		src = $Logs[index].imageURL;
-		datetime = $Logs[index].datetime;
-		message = $Logs[index].message;
-		status = $Logs[index].status;
+		src = reversedLogs[index].imageURL;
+		datetime = reversedLogs[index].datetime;
+		message = reversedLogs[index].message;
+		status = reversedLogs[index].status;
 	}
 
 	onMount(() => {
-		src = $Logs[0].imageURL;
-		datetime = $Logs[0].datetime;
-		message = $Logs[0].message;
-		status = $Logs[0].status;
+		src = reversedLogs[0]?.imageURL;
+		datetime = reversedLogs[0]?.datetime;
+		message = reversedLogs[0]?.message;
+		status =reversedLogs[0]?.status;
 	});
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
@@ -93,7 +95,7 @@
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
-						{#each $Logs as log, index}
+						{#each reversedLogs as log, index}
 							{#if index === selectedLogIndex}
 								<Log {log} selected={true} />
 							{:else}

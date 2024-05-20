@@ -4,6 +4,7 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import { Logs } from '$lib/stores/IO';
 
+	$: reversedLogs = [...$Logs].reverse()
 	// handle route for "multiple boxes" in the future
 	async function handleRoute(boxNum: number) {
 		goto(`/boxes/${boxNum}`);
@@ -17,10 +18,10 @@
 	</section>
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
 		<BoxPreview
-			src={$Logs[0]?.imageURL}
-			message={$Logs[0]?.message}
-			status={$Logs[0]?.status}
-			datetime={$Logs[0]?.datetime}
+			src={reversedLogs[0]?.imageURL}
+			message={reversedLogs[0]?.message}
+			status={reversedLogs[0]?.status}
+			datetime={reversedLogs[0]?.datetime}
 			on:click={() => handleRoute(1)}
 		/>
 		<BoxPreview src={null} message={''} status={''} datetime={''} on:click={() => handleRoute(2)} />
