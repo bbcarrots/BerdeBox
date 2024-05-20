@@ -1,4 +1,4 @@
-<script lan="ts">
+<!-- <script lan="ts">
 	import {
 		inputOutputRef,
 		inputRef,
@@ -50,4 +50,4 @@
 
 <button on:click={handleOutput}>Button 1!</button>
 <button on:click={handleInputOutput}>Button 2!</button>
-<button on:click={handleInput}>Button 3!</button>
+<button on:click={handleInput}>Button 3!</button> -->

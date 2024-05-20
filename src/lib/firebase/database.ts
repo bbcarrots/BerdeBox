@@ -7,26 +7,8 @@ export const outputRef = ref(firebase, 'output')
 export const inputOutputRef = ref(firebase, 'input_output')
 export const inputRef = ref(firebase, 'input')
 
-export function updateLED(isOn: boolean) {
-    /* Updates the value of `output.led_is_on` in real-time DB. */
-    const updateValue = {
-		led_is_on: isOn
-	}
-
-	update(outputRef, updateValue);
-}
-
-export function updateSpeaker(audio: string) {
-    /* Updates the value of `output.speaker_play` in real-time DB. */
-    const updateValue = {
-		speaker_play: audio
-	}
-
-	update(outputRef, updateValue);
-}
-
-export function updateMainLockOn(boxCode: string) {
-    /* Updates the value of `input_output.main_lock_is_on` in real-time DB. */
+export function updateMainLockOpen(boxCode: string) {
+    /* Updates the values of `main_lock_is_open`, `lock_buzzer_is_on`, `lock_led_is_on`, and `take_photo`. */
     const updateValue = {
 		main_lock_is_open: true,
         lock_buzzer_is_on: true,
@@ -37,13 +19,12 @@ export function updateMainLockOn(boxCode: string) {
 	return update(ref(firebase, boxCode + '/output'), updateValue)
 }
 
-export function updateCashLock(isOn: boolean, boxNumber: number) {
-    /* Updates the value of `input_output.${boxNumber}_is_on` in real-time DB. */
-    const property: string = `${boxNumber}_is_on`
+export function updateCashLockOpen(boxCode: string, cashBoxCode: string) {
+    /* Updates the value of `cb<#>_is_open` depending on the cashBoxID */
     const updateValue: {[key: string]: boolean} = {}
-    updateValue[property] = isOn
+    updateValue[cashBoxCode + "_is_open"] = true
 
-	update(inputOutputRef, updateValue);
+	return update(ref(firebase, boxCode + '/output/modules'), updateValue);
 }
 
 export function updateButton(isPressed: boolean) {
@@ -62,4 +43,22 @@ export function updateCamera(isOn: boolean) {
 	}
 
 	update(inputRef, updateValue);
+}
+
+export function updateLED(isOn: boolean) {
+    /* Updates the value of `output.led_is_on` in real-time DB. */
+    const updateValue = {
+		led_is_on: isOn
+	}
+
+	update(outputRef, updateValue);
+}
+
+export function updateSpeaker(audio: string) {
+    /* Updates the value of `output.speaker_play` in real-time DB. */
+    const updateValue = {
+		speaker_play: audio
+	}
+
+	update(outputRef, updateValue);
 }

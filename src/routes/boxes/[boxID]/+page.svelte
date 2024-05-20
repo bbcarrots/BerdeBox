@@ -70,7 +70,12 @@
 	const tabbarInactiveClasses = 'p-3 m-2';
 
 	// --------------------------------------------------------
-    let mainLockIsOpen: boolean = false
+	let mainLockIsOpen: boolean = false;
+	let cashBoxes: { [key: string]: boolean } = {
+		cb1: false,
+		cb2: false,
+		cb3: false
+	};
 
 	const asyncTimeout = (ms: number) => {
 		return new Promise((resolve) => {
@@ -78,13 +83,13 @@
 		});
 	};
 
-	async function handleOpenMainLock() {
+	async function handleMainLockOpen() {
 		/* Handles Open Main Lock event from Main Lock button by sending a PATCH request
         with payload requirement: boxCode. */
 
 		const payload = { boxCode: 'berdebox' + $page.params.boxID.toString() };
 
-        console.log("Main Lock should be open!")
+		console.log('Main Lock should be open!');
 		const response = await fetch('../../api/output/mainlock', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -92,11 +97,35 @@
 				'content-type': 'application/json'
 			}
 		});
-        console.log(await response.json())
+		console.log(await response.json());
 
-        await asyncTimeout(3000);
-        console.log("Main Lock should be locked again!")
-        mainLockIsOpen = false
+		await asyncTimeout(3000);
+		console.log('Main Lock should be locked again (UI side only, not DB side)!');
+		mainLockIsOpen = false;
+	}
+
+	async function handleOpenCashBox(cashBoxID: number) {
+		/* Handles Open Cash Box Lock event from Cash Box Lock button by sending a PATCH request
+        with payload requirement: cashBoxCode. */
+
+		const payload = {
+			boxCode: 'berdebox' + $page.params.boxID.toString(),
+			cashBoxCode: 'cb' + cashBoxID.toString()
+		};
+
+		console.log('Cash Box Lock should be open!');
+		const response = await fetch('../../api/output/cashbox', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+		console.log(await response.json());
+
+		await asyncTimeout(3000);
+		console.log('Cash Box Lock should be locked again (UI side only, not DB side)!');
+		cashBoxes['cb' + cashBoxID.toString()] = false;
 	}
 </script>
 
@@ -147,11 +176,26 @@
 			>
 				{#if isControl}
 					<span class="grid h-full gap-4 grid-cols-2">
-						<ControlButton boxType={'Mailbox 1'} bind:open={mainLockIsOpen} on:held={handleOpenMainLock}
+						<ControlButton
+							boxType={'Mailbox 1'}
+							bind:open={mainLockIsOpen}
+							on:held={handleMainLockOpen}
 						></ControlButton>
-						<ControlButton boxType={'Cashbox 1'} open={false} on:held={openBox}></ControlButton>
-						<ControlButton boxType={'Cashbox 2'} open={false} on:held={openBox}></ControlButton>
-						<ControlButton boxType={'Cashbox 3'} open={true} on:held={openBox}></ControlButton>
+						<ControlButton
+							boxType={'Cashbox 1'}
+							bind:open={cashBoxes.cb1}
+							on:held={() => handleOpenCashBox(1)}
+						></ControlButton>
+						<ControlButton
+							boxType={'Cashbox 2'}
+							bind:open={cashBoxes.cb2}
+							on:held={() => handleOpenCashBox(2)}
+						></ControlButton>
+						<ControlButton
+							boxType={'Cashbox 3'}
+							bind:open={cashBoxes.cb3}
+							on:held={() => handleOpenCashBox(3)}
+						></ControlButton>
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
