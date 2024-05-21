@@ -5,3 +5,8 @@ export type log = {
 	message: string;
 	status: string;
 };
+
+export type box = {
+	id: number;
+	logs: log[];
+}

@@ -1,8 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { getImages } from '$lib/firebase/storage';
-	import { Logs } from '$lib/stores/IO';
+	import { initializeBox } from '$lib/utils/helperFunctions';
 
 	// async function detectSWUpdate(){
 	// 	const registration = await navigator.serviceWorker.ready;
@@ -28,9 +27,8 @@
 	onMount(() => {
 		//input the id and the date string
 		//to-do: make this unhardcoded
-		getImages(1, '05-19-2024');
+		initializeBox(1);
 	});
-	// console.log('Logs', $Logs);
 </script>
 
 <body class="bg-[#EEF2F5]">
