@@ -17,7 +17,6 @@ export async function getImage(imageName: string): Promise<string | null> {
 	}
 }
 
-
 export async function getImages(mailbox_num: number, date: string) {
 	const mailboxPics = ref(storage, `berdebox${mailbox_num}/${date}`);
 
@@ -39,7 +38,7 @@ export async function getImages(mailbox_num: number, date: string) {
 
 			const information = metadata.name.split('-');
 
-			console.log(information);
+			// console.log(information);
 			return {
 				id: Number(information[0]),
 				imageURL: urls[index],
