@@ -17,7 +17,6 @@ export async function getImage(imageName: string): Promise<string | null> {
 	}
 }
 
-
 export async function getImages(mailbox_num: number, date: string) {
 	const mailboxPics = ref(storage, `berdebox${mailbox_num}/${date}`);
 
