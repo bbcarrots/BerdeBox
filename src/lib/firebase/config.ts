@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyCTTM_Z9FNavPy8Phs5Z_VqOlmneMZcAFM",
     authDomain: "cs145-0x0-b0x0-labs-berdebox.firebaseapp.com",
     databaseURL: "https://cs145-0x0-b0x0-labs-berdebox-default-rtdb.asia-southeast1.firebasedatabase.app",
