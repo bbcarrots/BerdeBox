@@ -17,7 +17,6 @@ export async function initializeBox(id: number){
 // this function takes in the action and the status from the filename
 // it returns the associated message to be displayed in the frontend.
 export function getMessage(status: string, action: string) {
-	console.log(action.includes('mbopen'), status);
 	if (action.includes('mbopen')) {
 		if (status == 'success') {
 			return 'Mailbox successfully opened.';
