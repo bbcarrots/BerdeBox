@@ -1,4 +1,4 @@
-import { updateCashLockOpen } from '$lib/firebase/database.js';
+import { updateCashLockOpen, updateTakePhoto } from '$lib/firebase/database.js';
 import { json } from '@sveltejs/kit';
 
 export async function PATCH({ request }) {
@@ -6,7 +6,15 @@ export async function PATCH({ request }) {
 
 	const { boxCode, cashBoxCode } = await request.json();
 
-	const response = await updateCashLockOpen(boxCode, cashBoxCode)
+	let response = await updateCashLockOpen(boxCode, cashBoxCode)
+		.then(() => {
+			return { success: true, error: null };
+		})
+		.catch((error) => {
+			return { success: false, error: error };
+		});
+
+    response = await updateTakePhoto(boxCode)
 		.then(() => {
 			return { success: true, error: null };
 		})

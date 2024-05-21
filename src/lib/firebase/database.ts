@@ -22,3 +22,10 @@ export function updateCashLockOpen(boxCode: string, cashBoxCode: string) {
 
 	return update(ref(firebase, boxCode + '/output/modules'), updateValue);
 }
+
+export function updateTakePhoto(boxCode: string) {
+	/* Updates the value of `cb<#>_is_open` depending on the cashBoxID */
+	const updateValue: { [key: string]: boolean } = { take_photo: true };
+
+	return update(ref(firebase, boxCode + '/output'), updateValue);
+}
