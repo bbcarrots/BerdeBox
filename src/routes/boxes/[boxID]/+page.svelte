@@ -8,8 +8,7 @@
 	import { onMount } from 'svelte';
 
 	const boxID = Number($page.params.boxID);
-	$: reversedLogs = [...$Logs].reverse()
-
+	$: reversedLogs = [...$Logs].reverse();
 
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
@@ -26,28 +25,46 @@
 		status = reversedLogs[index].status;
 	}
 
+	// -------------------------------------------------------- FIREBASE CODE
+	import { firebaseDBFront } from '$lib/stores/FirebaseClient';
+	import { onValue, ref, update } from 'firebase/database';
+
+	let isDoorbellRung: boolean = false;
+
+    const asyncTimeout = (ms: number) => {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
+    };
+
+	async function handleDoorbell(snapshot) {
+		if (snapshot.val()) {
+			isDoorbellRung = true;
+			update(ref($firebaseDBFront, 'berdebox1/output'), {take_photo: true});
+            await asyncTimeout(2000)
+            update(ref($firebaseDBFront, 'berdebox1/input'), {doorbell_button_is_pressed: false})
+		}
+	}
+
 	onMount(() => {
 		src = reversedLogs[0]?.imageURL;
 		datetime = reversedLogs[0]?.datetime;
 		message = reversedLogs[0]?.message;
-		status =reversedLogs[0]?.status;
+		status = reversedLogs[0]?.status;
+
+		// -------------------------------------------------------- FIREBASE CODE
+		onValue(ref($firebaseDBFront, 'berdebox1/input/doorbell_button_is_pressed'), handleDoorbell);
 	});
 
 	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
 	const tabbarInactiveClasses = 'p-3 m-2';
 
-	// --------------------------------------------------------
+	// -------------------------------------------------------- FIREBASE CODE
 	let mainLockIsOpen: boolean = false;
 	let cashBoxes: { [key: string]: boolean } = {
 		cb1: false,
 		cb2: false,
 		cb3: false
-	};
-
-	const asyncTimeout = (ms: number) => {
-		return new Promise((resolve) => {
-			setTimeout(resolve, ms);
-		});
 	};
 
 	async function handleMainLockOpen() {
@@ -56,7 +73,7 @@
 
 		const payload = { boxCode: 'berdebox' + $page.params.boxID.toString() };
 
-		console.log('Main Lock should be open!');
+		// console.log('Main Lock should be open!');
 		const response = await fetch('../../api/output/mainlock', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -64,10 +81,10 @@
 				'content-type': 'application/json'
 			}
 		});
-		console.log(await response.json());
+		// console.log(await response.json());
 
 		await asyncTimeout(3000);
-		console.log('Main Lock should be locked again (UI side only, not DB side)!');
+		// console.log('Main Lock should be locked again (UI side only, not DB side)!');
 		mainLockIsOpen = false;
 	}
 
@@ -80,7 +97,7 @@
 			cashBoxCode: 'cb' + cashBoxID.toString()
 		};
 
-		console.log('Cash Box Lock should be open!');
+		// console.log('Cash Box Lock should be open!');
 		const response = await fetch('../../api/output/cashbox', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -88,10 +105,10 @@
 				'content-type': 'application/json'
 			}
 		});
-		console.log(await response.json());
+		// console.log(await response.json());
 
 		await asyncTimeout(3000);
-		console.log('Cash Box Lock should be locked again (UI side only, not DB side)!');
+		// console.log('Cash Box Lock should be locked again (UI side only, not DB side)!');
 		cashBoxes['cb' + cashBoxID.toString()] = false;
 	}
 </script>

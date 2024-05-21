@@ -20,7 +20,7 @@ export async function getImage(imageName: string): Promise<string | null> {
 // this function takes in the action and the status from the filename
 // it returns the associated message to be displayed in the frontend.
 function get_message(status: string, action: string) {
-	console.log(action.includes('mbopen'), status);
+	// console.log(action.includes('mbopen'), status);
 	if (action.includes('mbopen')) {
 		if (status == 'success') {
 			return 'Mailbox successfully opened.';
@@ -61,7 +61,7 @@ export async function getImages(mailbox_num: number, date: string) {
 
 			const information = metadata.name.split('-');
 
-			console.log(information);
+			// console.log(information);
 			return {
 				id: Number(information[0]),
 				imageURL: urls[index],

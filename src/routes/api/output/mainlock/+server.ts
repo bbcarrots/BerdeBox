@@ -5,7 +5,7 @@ export async function PATCH({ request }) {
 	/* Handles Main Lock Open requests. */
 
 	const { boxCode } = await request.json();
-	console.log('PATCH request with boxCode: ' + boxCode);
+	// console.log('PATCH request with boxCode: ' + boxCode);
 
 	const response = await updateMainLockOpen(boxCode)
 		.then(() => {

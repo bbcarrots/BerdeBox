@@ -30,7 +30,7 @@
 		//to-do: make this unhardcoded
 		getImages(1, '05-19-2024');
 	});
-	console.log('Logs', $Logs);
+	// console.log('Logs', $Logs);
 </script>
 
 <body class="bg-[#EEF2F5]">
