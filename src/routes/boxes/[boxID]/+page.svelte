@@ -20,7 +20,6 @@
 		console.log('action!');
 	}
 
-	console.log($Boxes)
 
 	function handleLogClick(index: number) {
 		selectedLogIndex = index;
