@@ -7,7 +7,7 @@
 	import { Boxes } from '$lib/stores/IO';
 	import { onMount } from 'svelte';
 
-	const boxID = Number($page.params.boxID) -1;
+	const boxID = Number($page.params.boxID) - 1;
 
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
@@ -30,26 +30,26 @@
 
 	let isDoorbellRung: boolean = false;
 
-    const asyncTimeout = (ms: number) => {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-    };
+	const asyncTimeout = (ms: number) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, ms);
+		});
+	};
 
-	async function handleDoorbell(snapshot) {
+	async function handleDoorbell(snapshot: any) {
 		if (snapshot.val()) {
 			isDoorbellRung = true;
-			update(ref($firebaseDBFront, 'berdebox1/output'), {take_photo: true});
-            await asyncTimeout(2000)
-            update(ref($firebaseDBFront, 'berdebox1/input'), {doorbell_button_is_pressed: false})
+			update(ref($firebaseDBFront, 'berdebox1/output'), { take_photo: true });
+			await asyncTimeout(2000);
+			update(ref($firebaseDBFront, 'berdebox1/input'), { doorbell_button_is_pressed: false });
 		}
 	}
 
 	onMount(() => {
-		src = reversedLogs[0]?.imageURL;
-		datetime = reversedLogs[0]?.datetime;
-		message = reversedLogs[0]?.message;
-		status = reversedLogs[0]?.status;
+		src = $Boxes[boxID].logs[0]?.imageURL;
+		datetime = $Boxes[boxID].logs[0]?.datetime;
+		message = $Boxes[boxID].logs[0]?.message;
+		status = $Boxes[boxID].logs[0]?.status;
 
 		// -------------------------------------------------------- FIREBASE CODE
 		onValue(ref($firebaseDBFront, 'berdebox1/input/doorbell_button_is_pressed'), handleDoorbell);
