@@ -17,8 +17,8 @@ export async function getImage(imageName: string): Promise<string | null> {
 	}
 }
 
-export async function getImages(mailbox_num: number, date: string) {
-	const mailboxPics = ref(storage, `berdebox${mailbox_num}/${date}`);
+export async function getImages(mailbox_num: number) {
+	const mailboxPics = ref(storage, `berdebox${mailbox_num}`);
 
 	try {
 		const response = await listAll(mailboxPics);
@@ -48,9 +48,9 @@ export async function getImages(mailbox_num: number, date: string) {
 		});
 
 		// Update the Logs store with the new log entries
-		return logs
+		return logs;
 	} catch (error) {
 		console.error('Error retrieving photos or metadata:', error);
-		return []
+		return [];
 	}
 }
