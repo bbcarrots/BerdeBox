@@ -9,14 +9,19 @@
 	import { updateBoxesStore } from '$lib/utils/storeFunctions';
 	import Loader from '$lib/components/Loader.svelte';
 	import { loading } from '$lib/stores/Page';
+	import { page } from '$app/stores';
+
+	if ($page.url.pathname == "/") {
+        loading.set(true)
+    }
 
 	onMount(() => {
+
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
 			
 			// If authentication succeeds
 			if (user) {
-				loading.set(true)
 				let validUser = await getUserbyID(user.uid); 
 
 				// If the user exists, update the user store
@@ -30,10 +35,8 @@
 						boxes: validUser?.berdeboxes
 					});
 
-					console.log('Store', $UserStore);
 					updateBoxesStore($UserStore.boxes)
 					goto('/boxes');
-					loading.set(false)
 				}
 
 				// If the user doesn't exist yet
@@ -51,9 +54,7 @@
 						boxes: validUser?.berdeboxes
 					});
 
-					console.log('Store', $UserStore);
 					goto('/boxes');
-					loading.set(false)
 				}
 			} 
 			
@@ -68,7 +69,7 @@
 </script>
 
 {#if $loading == false}
-<body class="bg-[#EEF2F5]">
+<body class="h-svh bg-[#EEF2F5]">
 	<slot />
 </body>
 {:else}
