@@ -1,22 +1,14 @@
 <script lang="ts">
 	import { initializeFirebaseUI } from '$lib/firebase/auth';
 	import { onMount } from 'svelte';
-	import { getBerdeBoxes, getUsers, getBoxbyID, getUserbyID } from '$lib/firebase/firestore';
-	import firebase from 'firebase/compat/app';
+
 	onMount(() => {
 		//initialize the authentiation
 		initializeFirebaseUI();
-		// getBerdeBoxes();
-		// getUsers();
-		// getBoxbyID('GyPMCDzKWXxlKS6HUdf0');
-		// getBoxbyID('sdfg');
-
-		// getUserbyID('yq62Vt8JholuEr2a1vWq');
-		// getUserbyID('sdfgs');
 	});
 </script>
 
-<section class="grid grid-cols-1 md:grid-cols-2 items-center w-full h-full justify-center">
+<section class="grid grid-cols-1 md:grid-cols-2 items-center w-full h-svh justify-center">
 	<div
 		class="flex flex-col md:justify-normal gap-8 justify-between md:max-h-[500px] xl:px-[20%] lg:px-[10%] px-[5%] absolute md:relative md:h-auto h-full p-8"
 	>
