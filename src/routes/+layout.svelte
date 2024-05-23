@@ -6,58 +6,45 @@
 	import { UserStore } from '$lib/stores/User';
 	import { getUserbyID, addUser, getBoxByRef } from '$lib/firebase/firestore';
 	import { goto } from '$app/navigation';
-	import { Boxes } from '$lib/stores/IO';
-	import { getImages } from '$lib/firebase/storage';
+	import { updateBoxesStore } from '$lib/utils/storeFunctions';
+	import Loader from '$lib/components/Loader.svelte';
+	import { loading } from '$lib/stores/Page';
 
-	//todo: update in the future to get all of the images in a folder
 	onMount(() => {
-		//input the id and the date string
-		//to-do: make this unhardcoded
-
+		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
-			// Mark this function as async
+			
+			// If authentication succeeds
 			if (user) {
-				// check if the user is a valid user already
-				let validUser = await getUserbyID(user.uid); // Await the promise
+				loading.set(true)
+				let validUser = await getUserbyID(user.uid); 
 
-				// if the user already exists, load the user info and get boxes
+				// If the user exists, update the user store
+				// then update the boxes store based on user inforation
+				// then redirect to /boxes
 				if (validUser !== null) {
-					// subscribe to the notif
+					
 					UserStore.set({
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
 						boxes: validUser?.berdeboxes
 					});
 
-					//populate the boxes store
-					$UserStore.boxes.forEach(async (boxRef: any) => {
-						// obtain the box
-						let box: any = await getBoxByRef(boxRef);
-						const logs = await getImages(box.id);
-						let reversedLogs = [...logs].reverse();
-
-						console.log(box);
-						// update the boxes store
-						Boxes.update((currentBoxes) => [
-							...currentBoxes,
-							{
-								id: box.id,
-								logs: reversedLogs
-							}
-						]);
-					});
-
+					console.log('Store', $UserStore);
+					updateBoxesStore($UserStore.boxes)
 					goto('/boxes');
+					loading.set(false)
 				}
-				// if the user doesnt exist yet, add a new user to firestore
+
+				// If the user doesn't exist yet
+				// add a new user document to firestore
+				// then retrieve the user and update the user store
+				// then reroute to /boxes
 				else {
-					//add the user
 					addUser(user.uid);
 
-					// obtain the user
 					let validUser = await getUserbyID(user.uid); // Await the promise
 
-					// store the user information
 					UserStore.set({
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
@@ -66,8 +53,13 @@
 
 					console.log('Store', $UserStore);
 					goto('/boxes');
+					loading.set(false)
 				}
-			} else {
+			} 
+			
+			// If authentication fails
+			else {
+				loading.set(false)
 				// Handle the case where there's no user
 				console.log('No user is signed in');
 			}
@@ -75,9 +67,13 @@
 	});
 </script>
 
+{#if $loading == false}
 <body class="bg-[#EEF2F5]">
 	<slot />
 </body>
+{:else}
+	<Loader></Loader>
+{/if}
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap');
