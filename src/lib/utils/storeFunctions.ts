@@ -20,17 +20,15 @@ export async function updateBoxesStore(boxRefs:any){
         }];
     }
 
-    console.log("final boxes:", boxes);
-
     // Update the boxes store
     Boxes.set(boxes);
+    return true;
 }
 
 export async function isBoxInUserBoxes(boxID: number, userBoxes: any[]): Promise<boolean> {
     for (const boxRef of userBoxes) {
         const userBox:any = await getBoxByRef(boxRef);
         if (Number(userBox.id) === boxID) {
-            console.log(userBox.id, boxID, Number(userBox.id) === boxID);
             return true;
         }
     }

@@ -4,11 +4,11 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import { Icon, ChevronLeft, Plus } from 'svelte-hero-icons';
 	import { Boxes } from '$lib/stores/IO';
-	import { getBerdeBoxes, getBoxByRef } from '$lib/firebase/firestore';
+	import { getBerdeBoxes } from '$lib/firebase/firestore';
 	import { UserStore } from '$lib/stores/User';
 	import { updateUserBoxes, getUserbyID } from '$lib/firebase/firestore';
-	import { updateBoxesStore, isBoxInUserBoxes } from '$lib/utils/storeFunctions';
-	
+	import { updateBoxesStore, isBoxInUserBoxes } from '$lib/utils/storeFunctions'
+
 	// ADD BOX VARIABLES
 	let openCodeForm = false;
 	let boxID: string;
@@ -42,8 +42,8 @@
                 if (await isBoxInUserBoxes(boxID, $UserStore.boxes)) {
                     console.log("Box is in user!");
                 } else {
-                    updateUserStore(box);
-                    updateBoxesStore($UserStore.boxes);
+                    await updateUserStore(box);
+                    await updateBoxesStore($UserStore.boxes);
                 }
             })();
 			}
@@ -55,7 +55,7 @@
 	}
 
 	async function updateUserStore(box:any){
-		updateUserBoxes($UserStore.uid, box.ref);
+		await updateUserBoxes($UserStore.uid, box.ref);
 		let validUser = await getUserbyID($UserStore.uid); 
 
 		UserStore.set({
@@ -63,14 +63,14 @@
 			notifToken: validUser?.notifToken,
 			boxes: validUser?.berdeboxes
 		});
+		return true;
 	}
-
 </script>
 
-<section class="h-calc([100%-20px]) max-h-screen {openCodeForm ? 'overflow-hidden' : ''}">
+<section class="h-full {openCodeForm ? 'overflow-hidden' : ''}">
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
-		<div class="z-20 grid grid-cols-1 w-full h-screen bg-[#EEF2F5] absolute">
+		<div class="z-20 grid grid-cols-1 w-full h-full bg-[#EEF2F5] absolute">
 			<!-- Form Content -->
 			<div class="flex flex-col items-center">
 				<!-- Header -->
@@ -107,7 +107,7 @@
 							on:click={handleSubmit}
 							type="submit"
 							value="Add Box"
-							class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center"
+							class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
 						/>
 					</form>
 				</div>
@@ -115,21 +115,25 @@
 		</div>
 	{/if}
 
-	<body class="grid gap-4 m-4">
+	<body class="grid gap-4 mx-4">
+		
+
 		<section class="grid gap-4">
-			<h2 class="text-bb-black">BerdeBox</h2>
+			<h2 class="text-bb-black m-2">BerdeBox</h2>
 			<Nav></Nav>
 		</section>
 		<section class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
-			{#each $Boxes as box}
-				<BoxPreview
-					src={box.logs[0]?.imageURL}
-					message={box.logs[0]?.message}
-					status={box.logs[0]?.status}
-					datetime={box.logs[0]?.datetime}
-					on:click={() => handleRoute(box.id)}
-				/>
-			{/each}
+			{#key $Boxes}
+				{#each $Boxes as box}
+					<BoxPreview
+						src={box.logs[0]?.imageURL}
+						message={box.logs[0]?.message}
+						status={box.logs[0]?.status}
+						datetime={box.logs[0]?.datetime}
+						on:click={() => handleRoute(box.id)}
+					/>
+				{/each}
+			{/key}
 			<button
 				class="w-full h-full bg-white rounded-[15px] min-h-[250px]"
 				on:click={() => {
