@@ -5,9 +5,12 @@
 	import { handleSignOut } from '$lib/firebase/auth';
 	import { UserStore } from '$lib/stores/User';
 	import { updateUserToken } from '$lib/firebase/firestore';
+	import { ChevronLeft, Icon, Bell, UserGroup, ChevronRight, ArrowLeftStartOnRectangle } from 'svelte-hero-icons';
+	import { goto } from '$app/navigation';
 
 	let messages = []; //array of messages received
 	let messaging: Messaging;
+	let notifsPermitted: boolean;
 
 	onMount(() => {
 		//register the service worker before everything else
@@ -69,26 +72,13 @@
 		});
 	}
 
-	// shows the notification
-	function showNotification() {
-		let notificationOptions = {
-			body: 'Dummy notif info',
-			icon: '<>'
-		};
-
-		let notif = new Notification('Test new notification', notificationOptions);
-		console.log(notif);
-		notif.onclick = () => {
-			console.log('Notification clicked');
-		};
-	}
-
 	function checkPermissions() {
 		if (window.Notification) {
 			if (Notification.permission === 'granted') {
 			} else if (Notification.permission !== 'denied') {
 				Notification.requestPermission((permission) => {
 					if (permission === 'granted') {
+						notifsPermitted = true;
 					}
 				});
 			}
@@ -96,9 +86,82 @@
 	}
 </script>
 
-Settings
-<button on:click={showNotification}> Show notification </button>
+<section class="h-calc([100%-20px]) max-h-screen">
+		<div class="z-20 grid grid-cols-1 w-full h-screen bg-[#EEF2F5] absolute">
+			<div class="flex flex-col items-center">
+				<!-- Header -->
+				<div class="flex items-center justify-between p-4 w-full my-4">
+					<button
+						on:click={() => {goto('/boxes')}}
+						class="right-2"
+					>
+						<Icon src={ChevronLeft} solid size="20" />
+					</button>
+					<h4>Settings</h4>
+					<div></div>
+				</div>
 
-<button on:click={requestPermission}> Enable notifications </button>
+				<!-- SETTING ITEMS -->
+				<div class="w-[95%]">
+					<p class="w-full p-2 my-2">General</p>
 
-<button on:click={handleSignOut}> Sign out </button>
+					<!-- Main settings group -->
+					<div class="grid bg-white w-full p-1 gap-1 rounded-[15px] border border-[#D9D9D9]/[.5]">
+						
+						<!-- Enable notification toggle -->
+						<button class="flex flex-row justify-between items-center p-5" on:click={requestPermission}> 
+	
+							<div class="flex flex-row itens-center gap-3">
+								<span class="text-bb-black/[0.8]">
+									<Icon src={Bell} outline size="25" />
+								</span>
+	
+								<p>Enable notifications</p> 
+							</div>
+							
+							<label class="inline-flex items-center cursor-pointer">
+								<input type="checkbox" bind:checked={notifsPermitted} class="sr-only peer">
+								<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+							</label>
+						</button>
+	
+						<!-- Divider -->
+						<div class="w-[95%] h-px bg-[#D9D9D9]/[.5] mx-[2.5%]"></div>
+
+						<!-- About redirect -->
+						<button class="flex flex-row justify-between items-center p-5" on:click> 
+							<div class="flex flex-row itens-center gap-3">
+								<span class="text-bb-black/[0.8]">
+									<Icon src={UserGroup} outline size="25" />
+								</span>
+	
+								<p>About b0x0 Labs</p> 
+							</div>
+
+							<span class="text-bb-black/[0.7]">
+								<Icon src={ChevronRight} outline micro size="25" />
+							</span>
+
+						</button>
+			
+					</div>
+		
+					<button class="flex flex-row justify-between items-center p-5" on:click={handleSignOut}> 
+						<div class="flex flex-row itens-center gap-3">
+
+							<span class="text-bb-black/[0.8]">
+								<Icon src={ArrowLeftStartOnRectangle} outline size="25" />
+							</span>
+
+							<p>Sign Out</p> 
+						</div>
+					
+					</button>
+		
+					</div>
+				</div>
+			</div>
+				
+
+
+</section>

@@ -19,4 +19,10 @@
             <p>Modules</p>
         </button>
     </a>
+
+    <a href="/settings">
+        <button>
+            Settings
+        </button>
+    </a>
 </div>
