@@ -3,65 +3,68 @@
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Nav from '$lib/components/Nav.svelte';
 	import { Icon, ChevronLeft, Plus } from 'svelte-hero-icons';
-	import { onMount } from 'svelte';
-	import { getImages } from '$lib/firebase/storage';
 	import { Boxes } from '$lib/stores/IO';
-	import { getBerdeBoxes } from '$lib/firebase/firestore';
+	import { getBerdeBoxes, getBoxByRef } from '$lib/firebase/firestore';
 	import { UserStore } from '$lib/stores/User';
-	import { getBoxByRef, updateUserBoxes } from '$lib/firebase/firestore';
-
+	import { updateUserBoxes, getUserbyID } from '$lib/firebase/firestore';
+	import { updateBoxesStore, isBoxInUserBoxes } from '$lib/utils/storeFunctions';
+	
+	// ADD BOX VARIABLES
 	let openCodeForm = false;
+	let boxID: string;
 
-	// handle route for "multiple boxes" in the future
+	// BUTTON ACTIONS
 	async function handleRoute(boxNum: number) {
 		goto(`/boxes/${boxNum}`);
 	}
 
-	let boxCode: string;
 	async function handleSubmit() {
-		initializeBox(Number(boxCode));
+		initializeBox(Number(boxID));
 		openCodeForm = false;
 	}
 
-	onMount(() => {
-		console.log();
-	});
+	// ADD BOX FUNCTIONS
+	async function initializeBox(boxID: number) {
 
-	//box to initialize it in the UI
-	export async function initializeBox(id: number) {
-		// check if the box exits
+		// Check if the id exists in the current box
+		// Obtain all of the boxes
 		let berdeBoxes = await getBerdeBoxes();
 
+		// Loop through each available berde box 
 		berdeBoxes.forEach((box) => {
-			//if the box exists
-			if (box.data().id == id) {
-				// add it to the user's firestore
-				updateUserBoxes($UserStore.uid, box.ref);
 
-				// load the boxes again to update
-				$UserStore.boxes = [];
-				$UserStore.boxes.forEach(async (boxRef: any) => {
-					// obtain the box
-					let box: any = await getBoxByRef(boxRef);
-					const logs = await getImages(box.id);
-					let reversedLogs = [...logs].reverse();
-					console.log(box);
-					// update the boxes store
-					Boxes.update((currentBoxes) => [
-						...currentBoxes,
-						{
-							id: box.id,
-							logs: reversedLogs
-						}
-					]);
-				});
+			//Check if the box id exists in berde boxes firestore
+			if (box.data().id == boxID) {
+				
+				// Check if the box id exists in the user berde boxes 
+				// Add it to the user's firestore if box id not in user
+				(async () => {
+                if (await isBoxInUserBoxes(boxID, $UserStore.boxes)) {
+                    console.log("Box is in user!");
+                } else {
+                    updateUserStore(box);
+                    updateBoxesStore($UserStore.boxes);
+                }
+            })();
 			}
-			// if the box doesn't exist
+			// If the box doesn't exist
 			else {
 				console.log('Box does not exist');
 			}
 		});
 	}
+
+	async function updateUserStore(box:any){
+		updateUserBoxes($UserStore.uid, box.ref);
+		let validUser = await getUserbyID($UserStore.uid); 
+
+		UserStore.set({
+			uid: validUser?.uid,
+			notifToken: validUser?.notifToken,
+			boxes: validUser?.berdeboxes
+		});
+	}
+
 </script>
 
 <section class="h-calc([100%-20px]) max-h-screen {openCodeForm ? 'overflow-hidden' : ''}">
@@ -92,7 +95,7 @@
 								<h4>Box Code</h4>
 							</label>
 							<input
-								bind:value={boxCode}
+								bind:value={boxID}
 								class="p-4 rounded-[10px]"
 								type="text"
 								id="boxID"
