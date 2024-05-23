@@ -9,4 +9,4 @@ export type log = {
 export type box = {
 	id: number;
 	logs: log[];
-}
+};
