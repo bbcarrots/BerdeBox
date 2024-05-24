@@ -11,3 +11,5 @@ export const UserStore: Writable<User> = writable({
 	notifToken: '',
 	boxes: []
 });
+
+export const notifsPermitted: Writable<boolean> = writable(false);

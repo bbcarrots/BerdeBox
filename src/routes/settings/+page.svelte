@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { firebaseApp } from '$lib/firebase/config';
 	import { onMount } from 'svelte';
-	import { getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
+	import { deleteToken, getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
 	import { handleSignOut } from '$lib/firebase/auth';
 	import { UserStore } from '$lib/stores/User';
 	import { updateUserToken } from '$lib/firebase/firestore';
 	import { ChevronLeft, Icon, Bell, UserGroup, ChevronRight, ArrowLeftStartOnRectangle } from 'svelte-hero-icons';
 	import { goto } from '$app/navigation';
+	import { notifsPermitted } from '$lib/stores/User';
 
 	let messages = []; //array of messages received
 	let messaging: any;
-	let notifsPermitted: boolean;
 
 	onMount(() => {
 		//register the service worker before everything else
@@ -80,7 +80,7 @@
 			} else if (Notification.permission !== 'denied') {
 				Notification.requestPermission((permission) => {
 					if (permission === 'granted') {
-						notifsPermitted = true;
+						notifsPermitted.set(true);
 					}
 				});
 			}
@@ -101,6 +101,56 @@
 		console.log(await response.json());
 	}
 
+	async function unsubscribeTokenToTopic(token: string, topic: string){
+
+	}
+
+	async function handleNotifToggle(){
+
+		// if the notifs were permitted,
+		if ($notifsPermitted){
+
+			// unsubscribe to the topic
+			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+
+			// set the permissions back to false
+			notifsPermitted.set(false);
+
+			// delete the token
+			deleteToken(messaging)
+		}
+
+		// if the notifs were not permitted
+		else {
+
+			// get the token
+			getToken(messaging, {
+					vapidKey:
+						'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
+				})
+					.then((fetchedToken) => {
+						//update the store
+						UserStore.set({
+							uid: $UserStore.uid,
+							notifToken: fetchedToken,
+							boxes: $UserStore.boxes
+						});
+
+						//update firestore user information with token
+						updateUserToken($UserStore.uid, fetchedToken);
+						subscribeTokenToTopic(fetchedToken, 'doorbell-alerts');
+						
+					})
+					.catch((error) => {
+						// edit handler for
+						console.log('Error fetching token', error);
+					});
+				
+			}
+
+			notifsPermitted.set(true);
+
+		}
 </script>
 
 <section class="h-calc([100%-20px]) max-h-screen">
@@ -137,7 +187,7 @@
 							</div>
 							
 							<label class="inline-flex items-center cursor-pointer">
-								<input type="checkbox" bind:checked={notifsPermitted} class="sr-only peer">
+								<input type="checkbox" class="sr-only peer" bind:checked={$notifsPermitted}>
 								<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
 							</label>
 						</button>
@@ -178,7 +228,4 @@
 					</div>
 				</div>
 			</div>
-				
-
-
 </section>
