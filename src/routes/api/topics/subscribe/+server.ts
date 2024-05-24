@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { json } from '@sveltejs/kit';
-import serviceAccount from "../../../../functions/config/serviceAccountPrivateKey.json" with { type: "json"}; // you can get the .json file on firebase service account .
+import serviceAccount from "../../../../../functions/config/serviceAccountPrivateKey.json" with { type: "json"}; // you can get the .json file on firebase service account .
 
 let newServiceAccount = serviceAccount as any;
 
