@@ -15,7 +15,6 @@ if (!admin.apps.length) {
 export async function PATCH({ request }) {
     // Assume you have the registration token available
     const { registrationToken, topic } = await request.json();
-    console.log(registrationToken);
 
     // Subscribe the device to a topic
     let response = await admin.messaging().subscribeToTopic(registrationToken, topic);
