@@ -4,13 +4,19 @@
 	import { deleteToken, getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
 	import { handleSignOut } from '$lib/firebase/auth';
 	import { UserStore } from '$lib/stores/User';
-	import { updateUserToken } from '$lib/firebase/firestore';
+	import { updateUserToken, getUserbyID } from '$lib/firebase/firestore';
 	import { ChevronLeft, Icon, Bell, UserGroup, ChevronRight, ArrowLeftStartOnRectangle } from 'svelte-hero-icons';
 	import { goto } from '$app/navigation';
 	import { notifsPermitted } from '$lib/stores/User';
 
 	let messages = []; //array of messages received
 	let messaging: any;
+
+	let isNotifPermitted:boolean;
+
+	$: {
+		isNotifPermitted = $notifsPermitted
+	}
 
 	onMount(() => {
 		//register the service worker before everything else
@@ -29,7 +35,7 @@
 		checkPermissions();
 
 		messaging = getMessaging(firebaseApp);
-		requestPermission();
+		// requestPermission();
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
 			console.log(payload.notification?.title);
@@ -53,18 +59,9 @@
 					vapidKey:
 						'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
 				})
-					.then((fetchedToken) => {
-						//update the store
-						UserStore.set({
-							uid: $UserStore.uid,
-							notifToken: fetchedToken,
-							boxes: $UserStore.boxes
-						});
-
+					.then(async (fetchedToken) => {
 						//update firestore user information with token
-						updateUserToken($UserStore.uid, fetchedToken);
-						subscribeTokenToTopic(fetchedToken, 'doorbell-alerts');
-						
+						await updateUserStore(fetchedToken)
 					})
 					.catch((error) => {
 						// edit handler for
@@ -90,7 +87,7 @@
 	async function subscribeTokenToTopic(token:string, topic: string) {
 		const payload = { registrationToken: token, topic: topic}
 
-		const response = await fetch('../../api/topics', {
+		const response = await fetch('../../api/topics/subscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -102,55 +99,60 @@
 	}
 
 	async function unsubscribeTokenToTopic(token: string, topic: string){
+		const payload = { registrationToken: token, topic: topic}
 
+		const response = await fetch('../../api/topics/unsubscribe', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+
+		console.log(await response.json());
 	}
 
-	async function handleNotifToggle(){
+	async function handleNotifToggle(value:boolean){
 
 		// if the notifs were permitted,
-		if ($notifsPermitted){
+		if (value){
+			console.log("here ubsubscribing")
 
 			// unsubscribe to the topic
+			console.log('unsubscribing', $UserStore.notifToken)
 			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			// delete the token
+			// await updateUserStore('');
 
 			// set the permissions back to false
 			notifsPermitted.set(false);
-
-			// delete the token
-			deleteToken(messaging)
+			console.log($UserStore)
 		}
 
 		// if the notifs were not permitted
 		else {
-
-			// get the token
-			getToken(messaging, {
-					vapidKey:
-						'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
-				})
-					.then((fetchedToken) => {
-						//update the store
-						UserStore.set({
-							uid: $UserStore.uid,
-							notifToken: fetchedToken,
-							boxes: $UserStore.boxes
-						});
-
-						//update firestore user information with token
-						updateUserToken($UserStore.uid, fetchedToken);
-						subscribeTokenToTopic(fetchedToken, 'doorbell-alerts');
-						
-					})
-					.catch((error) => {
-						// edit handler for
-						console.log('Error fetching token', error);
-					});
-				
-			}
+			console.log("here subscribing")
+			requestPermission();
+			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 
 			notifsPermitted.set(true);
+			console.log($UserStore)
+
 
 		}
+	}
+
+	async function updateUserStore(fetchedToken:any){
+		console.log($UserStore.uid);
+		await updateUserToken($UserStore.uid, fetchedToken);
+
+		UserStore.set({
+			uid: $UserStore.uid,
+			notifToken: fetchedToken,
+			boxes: $UserStore.boxes
+		});
+		return true;
+	}
 </script>
 
 <section class="h-calc([100%-20px]) max-h-screen">
@@ -176,7 +178,7 @@
 					<div class="grid bg-white w-full p-1 gap-1 rounded-[15px] border border-[#D9D9D9]/[.5]">
 						
 						<!-- Enable notification toggle -->
-						<button class="flex flex-row justify-between items-center p-5" on:click={requestPermission}> 
+						<button class="flex flex-row justify-between items-center p-5" on:click={() => {handleNotifToggle(isNotifPermitted)}}> 
 	
 							<div class="flex flex-row itens-center gap-3">
 								<span class="text-bb-black/[0.8]">
@@ -187,7 +189,7 @@
 							</div>
 							
 							<label class="inline-flex items-center cursor-pointer">
-								<input type="checkbox" class="sr-only peer" bind:checked={$notifsPermitted}>
+								<input type="checkbox" class="sr-only peer" bind:checked={isNotifPermitted}>
 								<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
 							</label>
 						</button>
