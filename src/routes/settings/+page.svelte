@@ -9,7 +9,7 @@
 	import { goto } from '$app/navigation';
 
 	let messages = []; //array of messages received
-	let messaging: Messaging;
+	let messaging: any;
 	let notifsPermitted: boolean;
 
 	onMount(() => {
@@ -63,6 +63,8 @@
 
 						//update firestore user information with token
 						updateUserToken($UserStore.uid, fetchedToken);
+						subscribeTokenToTopic(fetchedToken, 'doorbell-alerts');
+						
 					})
 					.catch((error) => {
 						// edit handler for
@@ -84,6 +86,21 @@
 			}
 		}
 	}
+
+	async function subscribeTokenToTopic(token:string, topic: string) {
+		const payload = { registrationToken: token, topic: topic}
+
+		const response = await fetch('../../api/topics', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+
+		console.log(await response.json());
+	}
+
 </script>
 
 <section class="h-calc([100%-20px]) max-h-screen">
