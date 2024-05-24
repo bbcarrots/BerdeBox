@@ -7,10 +7,18 @@
 	import { updateUserToken } from '$lib/firebase/firestore';
 	import { ChevronLeft, Icon, Bell, UserGroup, ChevronRight, ArrowLeftStartOnRectangle } from 'svelte-hero-icons';
 	import { goto } from '$app/navigation';
+	import SmallLoader from '$lib/components/SmallLoader.svelte';
 
 	let messages = []; //array of messages received
-	let messaging: Messaging;
-	let notifsPermitted: boolean;
+	let messaging: any;
+
+	let isNotifPermitted:boolean;
+	let loading = false;
+
+	$: {
+		isNotifPermitted = $UserStore.notifsPermitted
+		loading = loading
+	}
 
 	onMount(() => {
 		//register the service worker before everything else
@@ -29,7 +37,7 @@
 		checkPermissions();
 
 		messaging = getMessaging(firebaseApp);
-		requestPermission();
+		// requestPermission();
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
 			console.log(payload.notification?.title);
@@ -48,28 +56,24 @@
 		Notification.requestPermission().then((permission) => {
 			// if the permission has been granted, get the token
 			if (permission === 'granted') {
-				//get the token and set the fetched token to the user's token
-				getToken(messaging, {
+				getUserToken()
+			}
+		});
+	}
+
+	function getUserToken(){
+		getToken(messaging, {
 					vapidKey:
 						'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
 				})
-					.then((fetchedToken) => {
-						//update the store
-						UserStore.set({
-							uid: $UserStore.uid,
-							notifToken: fetchedToken,
-							boxes: $UserStore.boxes
-						});
-
+					.then(async (fetchedToken) => {
 						//update firestore user information with token
-						updateUserToken($UserStore.uid, fetchedToken);
+						await updateUserStore(fetchedToken)
 					})
 					.catch((error) => {
 						// edit handler for
 						console.log('Error fetching token', error);
 					});
-			}
-		});
 	}
 
 	function checkPermissions() {
@@ -78,11 +82,83 @@
 			} else if (Notification.permission !== 'denied') {
 				Notification.requestPermission((permission) => {
 					if (permission === 'granted') {
-						notifsPermitted = true;
+						UserStore.set({
+							uid: $UserStore.uid,
+							notifToken: $UserStore.notifToken,
+							boxes: $UserStore.boxes,
+							notifsPermitted: true
+						});
 					}
 				});
 			}
 		}
+	}
+
+	async function subscribeTokenToTopic(token:string, topic: string) {
+		const payload = { registrationToken: token, topic: topic}
+
+		const response = await fetch('../../api/topics/subscribe', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+	}
+
+	async function unsubscribeTokenToTopic(token: string, topic: string){
+		const payload = { registrationToken: token, topic: topic}
+
+		const response = await fetch('../../api/topics/unsubscribe', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+	}
+
+	async function handleNotifToggle(value:boolean){
+		loading = true;
+
+		// if the notifs were permitted,
+		if (value){
+			// unsubscribe to the topic
+			console.log('unsubscribing', $UserStore.notifToken)
+			await updateUserStore('');
+			loading = false
+			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+		}
+		// if the notifs were not permitted
+		else {
+			console.log('subscribing', $UserStore.notifToken)
+			await getUserToken();
+			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			loading = false
+		}
+	}
+
+	async function updateUserStore(fetchedToken:any){
+		console.log($UserStore.uid);
+		await updateUserToken($UserStore.uid, fetchedToken);
+
+		if (fetchedToken == ''){
+			UserStore.set({
+				uid: $UserStore.uid,
+				notifToken: $UserStore.notifToken,
+				boxes: $UserStore.boxes,
+				notifsPermitted: false
+			});
+		} else {
+			UserStore.set({
+				uid: $UserStore.uid,
+				notifToken: fetchedToken,
+				boxes: $UserStore.boxes,
+				notifsPermitted: true
+			});
+		}
+		
+		return true;
 	}
 </script>
 
@@ -109,7 +185,7 @@
 					<div class="grid bg-white w-full p-1 gap-1 rounded-[15px] border border-[#D9D9D9]/[.5]">
 						
 						<!-- Enable notification toggle -->
-						<button class="flex flex-row justify-between items-center p-5" on:click={requestPermission}> 
+						<button class="flex flex-row justify-between items-center p-5" on:click={() => {handleNotifToggle(isNotifPermitted)}}> 
 	
 							<div class="flex flex-row itens-center gap-3">
 								<span class="text-bb-black/[0.8]">
@@ -119,10 +195,16 @@
 								<p>Enable notifications</p> 
 							</div>
 							
-							<label class="inline-flex items-center cursor-pointer">
-								<input type="checkbox" bind:checked={notifsPermitted} class="sr-only peer">
-								<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-							</label>
+							<div class='flex flex-row gap-4 items-center'>
+								{#if loading}
+									<SmallLoader/>
+								{/if}
+								<label class="inline-flex items-center cursor-pointer">
+									<input type="checkbox" class="sr-only peer" bind:checked={isNotifPermitted}>
+									<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+								</label>
+							</div>
+
 						</button>
 	
 						<!-- Divider -->
@@ -161,7 +243,4 @@
 					</div>
 				</div>
 			</div>
-				
-
-
 </section>

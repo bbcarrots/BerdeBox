@@ -1,3 +1,4 @@
+import { notifsPermitted } from '$lib/stores/User';
 import { firebaseApp } from './config';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { collection, query, getDocs } from 'firebase/firestore';
@@ -53,24 +54,45 @@ export async function getUserbyID(docID: string) {
 export async function addUser(docID: string) {
 	await setDoc(doc(firestoreDB, 'users', docID), {
 		notifToken: '',
-		berdeboxes: []
+		berdeboxes: [],
+		notifsPermitted: false
 	});
 }
 
 export async function updateUserToken(docID: string, notifToken: string) {
-	const usersRef = doc(firestoreDB, 'users', docID);
-	const querySnapshot = await getDoc(usersRef);
+    const usersRef = doc(firestoreDB, 'users', docID);
 
-	if (querySnapshot.exists()) {
-		setDoc(usersRef, {
-			berdeboxes: querySnapshot.data().berdeboxes,
-			notifToken: notifToken
-		});
+    try {
+        const querySnapshot = await getDoc(usersRef);
 
-		return true;
-	} else {
-		return false;
-	}
+        if (querySnapshot.exists()) {
+            const userData = querySnapshot.data();
+            if (userData && userData.berdeboxes) {
+
+				if (notifToken == '') {
+					await setDoc(usersRef, {
+						berdeboxes: userData.berdeboxes,
+						notifToken: userData.notifToken,
+						notifsPermitted: false
+					});
+				} else {
+					await setDoc(usersRef, {
+						berdeboxes: userData.berdeboxes,
+						notifToken: notifToken,
+						notifsPermitted: true
+					});
+				}
+               
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } catch (error) {
+        return false;
+    }
 }
 
 export async function updateUserBoxes(docID: string, box: any) {
@@ -80,6 +102,7 @@ export async function updateUserBoxes(docID: string, box: any) {
 	if (querySnapshot.exists()) {
 		setDoc(usersRef, {
 			berdeboxes: [...querySnapshot.data().berdeboxes, box],
+			notifsPermitted: querySnapshot.data().notifsPermitted,
 			notifToken: querySnapshot.data().notifToken
 		});
 		
@@ -88,3 +111,4 @@ export async function updateUserBoxes(docID: string, box: any) {
 		return false;
 	}
 }
+

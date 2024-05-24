@@ -4,10 +4,14 @@ export type User = {
 	uid: string;
 	notifToken: string;
 	boxes: number[];
+	notifsPermitted: boolean;
 };
 
 export const UserStore: Writable<User> = writable({
 	uid: '',
 	notifToken: '',
-	boxes: []
+	boxes: [],
+	notifsPermitted: false
 });
+
+export const notifsPermitted: Writable<boolean> = writable(false);

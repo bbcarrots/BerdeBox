@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "cs145-0x0-b0x0-labs-berdebox",
+    "allaine": "cs145-0x0-b0x0-labs-berdebox"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
