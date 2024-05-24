@@ -57,20 +57,32 @@ export async function addUser(docID: string) {
 	});
 }
 
+
+
 export async function updateUserToken(docID: string, notifToken: string) {
-	const usersRef = doc(firestoreDB, 'users', docID);
-	const querySnapshot = await getDoc(usersRef);
+    console.log("Updating user token for document:", docID);
+    const usersRef = doc(firestoreDB, 'users', docID);
 
-	if (querySnapshot.exists()) {
-		setDoc(usersRef, {
-			berdeboxes: querySnapshot.data().berdeboxes,
-			notifToken: notifToken
-		});
+    try {
+        const querySnapshot = await getDoc(usersRef);
 
-		return true;
-	} else {
-		return false;
-	}
+        if (querySnapshot.exists()) {
+            const userData = querySnapshot.data();
+            if (userData && userData.berdeboxes) {
+                await setDoc(usersRef, {
+                    berdeboxes: userData.berdeboxes,
+                    notifToken: notifToken
+                });
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } catch (error) {
+        return false;
+    }
 }
 
 export async function updateUserBoxes(docID: string, box: any) {
