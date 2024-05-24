@@ -1,3 +1,4 @@
+import { notifsPermitted } from '$lib/stores/User';
 import { firebaseApp } from './config';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { collection, query, getDocs } from 'firebase/firestore';
@@ -53,14 +54,12 @@ export async function getUserbyID(docID: string) {
 export async function addUser(docID: string) {
 	await setDoc(doc(firestoreDB, 'users', docID), {
 		notifToken: '',
-		berdeboxes: []
+		berdeboxes: [],
+		notifsPermitted: false
 	});
 }
 
-
-
 export async function updateUserToken(docID: string, notifToken: string) {
-    console.log("Updating user token for document:", docID);
     const usersRef = doc(firestoreDB, 'users', docID);
 
     try {
@@ -69,10 +68,21 @@ export async function updateUserToken(docID: string, notifToken: string) {
         if (querySnapshot.exists()) {
             const userData = querySnapshot.data();
             if (userData && userData.berdeboxes) {
-                await setDoc(usersRef, {
-                    berdeboxes: userData.berdeboxes,
-                    notifToken: notifToken
-                });
+
+				if (notifToken == '') {
+					await setDoc(usersRef, {
+						berdeboxes: userData.berdeboxes,
+						notifToken: userData.notifToken,
+						notifsPermitted: false
+					});
+				} else {
+					await setDoc(usersRef, {
+						berdeboxes: userData.berdeboxes,
+						notifToken: notifToken,
+						notifsPermitted: true
+					});
+				}
+               
                 return true;
             } else {
                 return false;
@@ -92,6 +102,7 @@ export async function updateUserBoxes(docID: string, box: any) {
 	if (querySnapshot.exists()) {
 		setDoc(usersRef, {
 			berdeboxes: [...querySnapshot.data().berdeboxes, box],
+			notifsPermitted: querySnapshot.data().notifsPermitted,
 			notifToken: querySnapshot.data().notifToken
 		});
 		
@@ -100,3 +111,4 @@ export async function updateUserBoxes(docID: string, box: any) {
 		return false;
 	}
 }
+

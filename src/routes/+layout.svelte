@@ -3,7 +3,7 @@
 	import '../app.css';
 	import { auth } from '$lib/firebase/auth';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { UserStore } from '$lib/stores/User';
+	import { UserStore, notifsPermitted } from '$lib/stores/User';
 	import { getUserbyID, addUser, getBoxByRef } from '$lib/firebase/firestore';
 	import { goto } from '$app/navigation';
 	import { updateBoxesStore } from '$lib/utils/storeFunctions';
@@ -32,7 +32,8 @@
 					UserStore.set({
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
-						boxes: validUser?.berdeboxes
+						boxes: validUser?.berdeboxes,
+						notifsPermitted: validUser?.notifsPermitted
 					});
 
 					updateBoxesStore($UserStore.boxes)
@@ -51,7 +52,8 @@
 					UserStore.set({
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
-						boxes: validUser?.berdeboxes
+						boxes: validUser?.berdeboxes,
+						notifsPermitted: validUser?.notifsPermitted
 					});
 
 					goto('/boxes');

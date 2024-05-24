@@ -1,21 +1,23 @@
 <script lang="ts">
 	import { firebaseApp } from '$lib/firebase/config';
 	import { onMount } from 'svelte';
-	import { deleteToken, getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
+	import { getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
 	import { handleSignOut } from '$lib/firebase/auth';
 	import { UserStore } from '$lib/stores/User';
-	import { updateUserToken, getUserbyID } from '$lib/firebase/firestore';
+	import { updateUserToken } from '$lib/firebase/firestore';
 	import { ChevronLeft, Icon, Bell, UserGroup, ChevronRight, ArrowLeftStartOnRectangle } from 'svelte-hero-icons';
 	import { goto } from '$app/navigation';
-	import { notifsPermitted } from '$lib/stores/User';
+	import SmallLoader from '$lib/components/SmallLoader.svelte';
 
 	let messages = []; //array of messages received
 	let messaging: any;
 
 	let isNotifPermitted:boolean;
+	let loading = false;
 
 	$: {
-		isNotifPermitted = $notifsPermitted
+		isNotifPermitted = $UserStore.notifsPermitted
+		loading = loading
 	}
 
 	onMount(() => {
@@ -54,8 +56,13 @@
 		Notification.requestPermission().then((permission) => {
 			// if the permission has been granted, get the token
 			if (permission === 'granted') {
-				//get the token and set the fetched token to the user's token
-				getToken(messaging, {
+				getUserToken()
+			}
+		});
+	}
+
+	function getUserToken(){
+		getToken(messaging, {
 					vapidKey:
 						'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
 				})
@@ -67,8 +74,6 @@
 						// edit handler for
 						console.log('Error fetching token', error);
 					});
-			}
-		});
 	}
 
 	function checkPermissions() {
@@ -77,7 +82,12 @@
 			} else if (Notification.permission !== 'denied') {
 				Notification.requestPermission((permission) => {
 					if (permission === 'granted') {
-						notifsPermitted.set(true);
+						UserStore.set({
+							uid: $UserStore.uid,
+							notifToken: $UserStore.notifToken,
+							boxes: $UserStore.boxes,
+							notifsPermitted: true
+						});
 					}
 				});
 			}
@@ -94,8 +104,6 @@
 				'content-type': 'application/json'
 			}
 		})
-
-		console.log(await response.json());
 	}
 
 	async function unsubscribeTokenToTopic(token: string, topic: string){
@@ -108,37 +116,25 @@
 				'content-type': 'application/json'
 			}
 		})
-
-		console.log(await response.json());
 	}
 
 	async function handleNotifToggle(value:boolean){
+		loading = true;
 
 		// if the notifs were permitted,
 		if (value){
-			console.log("here ubsubscribing")
-
 			// unsubscribe to the topic
 			console.log('unsubscribing', $UserStore.notifToken)
+			await updateUserStore('');
+			loading = false
 			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
-			// delete the token
-			// await updateUserStore('');
-
-			// set the permissions back to false
-			notifsPermitted.set(false);
-			console.log($UserStore)
 		}
-
 		// if the notifs were not permitted
 		else {
-			console.log("here subscribing")
-			requestPermission();
+			console.log('subscribing', $UserStore.notifToken)
+			await getUserToken();
 			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
-
-			notifsPermitted.set(true);
-			console.log($UserStore)
-
-
+			loading = false
 		}
 	}
 
@@ -146,11 +142,22 @@
 		console.log($UserStore.uid);
 		await updateUserToken($UserStore.uid, fetchedToken);
 
-		UserStore.set({
-			uid: $UserStore.uid,
-			notifToken: fetchedToken,
-			boxes: $UserStore.boxes
-		});
+		if (fetchedToken == ''){
+			UserStore.set({
+				uid: $UserStore.uid,
+				notifToken: $UserStore.notifToken,
+				boxes: $UserStore.boxes,
+				notifsPermitted: false
+			});
+		} else {
+			UserStore.set({
+				uid: $UserStore.uid,
+				notifToken: fetchedToken,
+				boxes: $UserStore.boxes,
+				notifsPermitted: true
+			});
+		}
+		
 		return true;
 	}
 </script>
@@ -188,10 +195,16 @@
 								<p>Enable notifications</p> 
 							</div>
 							
-							<label class="inline-flex items-center cursor-pointer">
-								<input type="checkbox" class="sr-only peer" bind:checked={isNotifPermitted}>
-								<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-							</label>
+							<div class='flex flex-row gap-4 items-center'>
+								{#if loading}
+									<SmallLoader/>
+								{/if}
+								<label class="inline-flex items-center cursor-pointer">
+									<input type="checkbox" class="sr-only peer" bind:checked={isNotifPermitted}>
+									<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+								</label>
+							</div>
+
 						</button>
 	
 						<!-- Divider -->
