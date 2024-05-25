@@ -1,8 +1,9 @@
 import admin from 'firebase-admin';
 import { json } from '@sveltejs/kit';
-import serviceAccount from "../../../../../functions/config/serviceAccountPrivateKey.json" with { type: "json"}; // you can get the .json file on firebase service account .
+import { FIREBASE_ADMIN_KEY } from '$env/static/private';
 
-let newServiceAccount = serviceAccount as any;
+// let jsonString = process.env.FIREBASE_ADMIN_KEY
+let newServiceAccount = JSON.parse(FIREBASE_ADMIN_KEY)
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
