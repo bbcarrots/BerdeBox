@@ -9,6 +9,7 @@
 	import { updateUserBoxes, getUserbyID } from '$lib/firebase/firestore';
 	import { updateBoxesStore, isBoxInUserBoxes } from '$lib/utils/storeFunctions';
 	import { retrievingBoxes } from '$lib/stores/Page';
+	import HomeHeader from '$lib/components/HomeHeader.svelte';
 
 	let isRetrievingBoxes: boolean;
 	$: {
@@ -128,8 +129,8 @@
 
 	<body class="grid gap-4 mx-4">
 		<section class="grid gap-4">
-			<h2 class="text-bb-black m-2">Welcome to your BerdeBox, {$UserStore.name}</h2>
-			<img src={$UserStore.profilePhoto} alt="user profile" />
+			<HomeHeader></HomeHeader>
+
 			<Nav></Nav>
 		</section>
 		<section class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
