@@ -11,34 +11,34 @@
 	import { loading, retrievingBoxes } from '$lib/stores/Page';
 	import { page } from '$app/stores';
 
-	if ($page.url.pathname == "/") {
-        loading.set(true)
-    }
+	if ($page.url.pathname == '/') {
+		loading.set(true);
+	}
 
 	onMount(() => {
-		
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
-			
 			// If authentication succeeds
 			if (user) {
-				retrievingBoxes.set(true)
-				let validUser = await getUserbyID(user.uid); 
+				retrievingBoxes.set(true);
+				let validUser = await getUserbyID(user.uid);
+				console.log(user.displayName);
 
 				// If the user exists, update the user store
 				// then update the boxes store based on user inforation
 				// then redirect to /boxes
-				if (validUser !== null) {
-
+				if (validUser !== null && user !== null) {
 					UserStore.set({
+						name: user.displayName,
+						profilePhoto: user.photoURL,
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
 
-					await updateBoxesStore($UserStore.boxes)
-					retrievingBoxes.set(false)
+					await updateBoxesStore($UserStore.boxes);
+					retrievingBoxes.set(false);
 					goto('/boxes');
 				}
 
@@ -48,11 +48,13 @@
 				// then reroute to /boxes
 				else {
 					addUser(user.uid);
-					retrievingBoxes.set(true)
+					retrievingBoxes.set(true);
 
 					let validUser = await getUserbyID(user.uid); // Await the promise
 
 					UserStore.set({
+						name: user.displayName,
+						profilePhoto: user.photoURL,
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
 						boxes: validUser?.berdeboxes,
@@ -60,11 +62,11 @@
 					});
 					goto('/boxes');
 				}
-			} 
-			
+			}
+
 			// If authentication fails
 			else {
-				loading.set(false)
+				loading.set(false);
 				// Handle the case where there's no user
 				console.log('No user is signed in');
 			}
@@ -73,9 +75,9 @@
 </script>
 
 {#if $loading == false}
-<body class="h-svh bg-[#EEF2F5]">
-	<slot />
-</body>
+	<body class="h-svh bg-[#EEF2F5]">
+		<slot />
+	</body>
 {:else}
 	<Loader></Loader>
 {/if}
