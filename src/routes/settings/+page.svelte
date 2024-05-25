@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { firebaseApp } from '$lib/firebase/config';
 	import { onMount } from 'svelte';
-	import { getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
+	import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 	import { handleSignOut } from '$lib/firebase/auth';
 	import { UserStore } from '$lib/stores/User';
 	import { updateUserToken } from '$lib/firebase/firestore';
