@@ -6,7 +6,11 @@
 	import { Icon, XMark } from 'svelte-hero-icons';
 	import { Boxes } from '$lib/stores/IO';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
+	// --------------------------------------
 	const boxID = Number($page.params.boxID) - 1;
 
 	let isControl: boolean = true;
@@ -125,7 +129,7 @@
 	<!-- content -->
 	<div class="grid grid-cols-1 md:grid-cols-5 h-[calc(100%-60px)] m-0 md:m-4 md:h-[90%]">
 		<!-- box preview -->
-		<div class="col-span-3 mb-4 md:mr-4">
+		<div transition:scale class="col-span-3 mb-4 md:mr-4">
 			<BoxPreview {src} {datetime} {message} {status}></BoxPreview>
 		</div>
 
@@ -155,6 +159,7 @@
 
 			<!-- tabbar content -->
 			<div
+				transition:fly={{ x: 0, y: 3000 }}
 				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full mt-2"
 			>
 				{#if isControl}

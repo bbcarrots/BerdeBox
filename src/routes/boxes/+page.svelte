@@ -10,6 +10,7 @@
 	import { updateBoxesStore, isBoxInUserBoxes } from '$lib/utils/storeFunctions';
 	import { retrievingBoxes } from '$lib/stores/Page';
 	import HomeHeader from '$lib/components/HomeHeader.svelte';
+	import { fly } from 'svelte/transition';
 
 	let isRetrievingBoxes: boolean;
 	$: {
@@ -25,7 +26,9 @@
 		goto(`/boxes/${boxNum}`);
 	}
 
-	async function handleSubmit() {
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+
 		retrievingBoxes.set(true);
 		await initializeBox(Number(boxID));
 		openCodeForm = false;
@@ -82,7 +85,10 @@
 <section class="h-full {openCodeForm ? 'overflow-hidden' : ''}">
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
-		<div class="z-20 grid grid-cols-1 w-full h-full bg-[#EEF2F5] absolute">
+		<div
+			transition:fly={{ x: 3000, y: 0 }}
+			class="z-20 grid grid-cols-1 w-full h-full bg-[#EEF2F5] absolute"
+		>
 			<!-- Form Content -->
 			<div class="flex flex-col items-center">
 				<!-- Header -->
@@ -116,7 +122,9 @@
 						</div>
 
 						<input
-							on:click={handleSubmit}
+							on:click={(event) => {
+								handleSubmit(event);
+							}}
 							type="submit"
 							value="Add Box"
 							class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
@@ -126,14 +134,16 @@
 			</div>
 		</div>
 	{/if}
-
 	<body class="grid gap-4 mx-4">
 		<section class="grid gap-4">
 			<HomeHeader></HomeHeader>
 
 			<Nav></Nav>
 		</section>
-		<section class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
+		<section
+			transition:fly={{ x: -3000, y: 0 }}
+			class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full"
+		>
 			{#key $Boxes}
 				{#if isRetrievingBoxes}
 					<div
@@ -146,13 +156,15 @@
 					</div>
 				{:else}
 					{#each $Boxes as box}
-						<BoxPreview
-							src={box.logs[0]?.imageURL}
-							message={box.logs[0]?.message}
-							status={box.logs[0]?.status}
-							datetime={box.logs[0]?.datetime}
-							on:click={() => handleRoute(box.id)}
-						/>
+						<span>
+							<BoxPreview
+								src={box.logs[0]?.imageURL}
+								message={box.logs[0]?.message}
+								status={box.logs[0]?.status}
+								datetime={box.logs[0]?.datetime}
+								on:click={() => handleRoute(box.id)}
+							/>
+						</span>
 					{/each}
 				{/if}
 			{/key}
