@@ -134,6 +134,7 @@
 			</div>
 		</div>
 	{/if}
+
 	<body class="grid gap-4 mx-4">
 		<section class="grid gap-4">
 			<HomeHeader></HomeHeader>
