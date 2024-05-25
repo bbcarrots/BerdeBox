@@ -3,40 +3,42 @@
 	import '../app.css';
 	import { auth } from '$lib/firebase/auth';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { UserStore, notifsPermitted } from '$lib/stores/User';
-	import { getUserbyID, addUser, getBoxByRef } from '$lib/firebase/firestore';
+	import { UserStore } from '$lib/stores/User';
+	import { getUserbyID, addUser } from '$lib/firebase/firestore';
 	import { goto } from '$app/navigation';
 	import { updateBoxesStore } from '$lib/utils/storeFunctions';
 	import Loader from '$lib/components/Loader.svelte';
-	import { loading } from '$lib/stores/Page';
+	import { loading, retrievingBoxes } from '$lib/stores/Page';
 	import { page } from '$app/stores';
 
-	if ($page.url.pathname == "/") {
-        loading.set(true)
-    }
+	if ($page.url.pathname == '/') {
+		loading.set(true);
+	}
 
 	onMount(() => {
-
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
-			
 			// If authentication succeeds
 			if (user) {
-				let validUser = await getUserbyID(user.uid); 
+				retrievingBoxes.set(true);
+				let validUser = await getUserbyID(user.uid);
+				console.log(user.displayName);
 
 				// If the user exists, update the user store
 				// then update the boxes store based on user inforation
 				// then redirect to /boxes
-				if (validUser !== null) {
-					
+				if (validUser !== null && user !== null) {
 					UserStore.set({
+						name: user.displayName,
+						profilePhoto: user.photoURL,
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
 
-					updateBoxesStore($UserStore.boxes)
+					await updateBoxesStore($UserStore.boxes);
+					retrievingBoxes.set(false);
 					goto('/boxes');
 				}
 
@@ -46,23 +48,25 @@
 				// then reroute to /boxes
 				else {
 					addUser(user.uid);
+					retrievingBoxes.set(true);
 
 					let validUser = await getUserbyID(user.uid); // Await the promise
 
 					UserStore.set({
+						name: user.displayName,
+						profilePhoto: user.photoURL,
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
-
 					goto('/boxes');
 				}
-			} 
-			
+			}
+
 			// If authentication fails
 			else {
-				loading.set(false)
+				loading.set(false);
 				// Handle the case where there's no user
 				console.log('No user is signed in');
 			}
@@ -71,9 +75,9 @@
 </script>
 
 {#if $loading == false}
-<body class="h-svh bg-[#EEF2F5]">
-	<slot />
-</body>
+	<body class="h-svh bg-[#EEF2F5]">
+		<slot />
+	</body>
 {:else}
 	<Loader></Loader>
 {/if}

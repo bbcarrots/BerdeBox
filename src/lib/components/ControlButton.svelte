@@ -24,6 +24,20 @@
 		holding = false; // Button is released
 	}
 
+	function handleTouchStart() {
+		holding = true; // Button is being held down
+		timer = setTimeout(() => {
+			dispatch('held');
+			holding = false; // Button is released
+			open = true;
+		}, 2000);
+	}
+
+	function handleTouchEnd() {
+		clearTimeout(timer);
+		holding = false; // Button is released
+	}
+
 	onDestroy(() => {
 		// Ensure to clear the timer when the component is destroyed
 		clearTimeout(timer);
@@ -35,6 +49,8 @@
 <button
 	on:mousedown={handleMouseDown}
 	on:mouseup={handleMouseUp}
+	on:touchstart={handleTouchStart}
+	on:touchend={handleTouchEnd}
 	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#E7E2FA] w-full h-full'}
 	disabled={open}
 >
