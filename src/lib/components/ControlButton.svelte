@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { onDestroy } from 'svelte';
-	import { Icon, LockClosed, LockOpen } from 'svelte-hero-icons';
+	import { Icon, LockClosed } from 'svelte-hero-icons';
 
 	export let boxType;
 	export let open: boolean;
@@ -54,7 +54,7 @@
 	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#E7E2FA] w-full h-full'}
 	disabled={open}
 >
-	<div class="grid items-center justify-center p-6">
+	<div class="grid items-center justify-center p-6 no-select">
 		{#if !open}
 			<div class="flex gap-2 flex-col items-center justify-center">
 				<div>
@@ -128,5 +128,12 @@
 		100% {
 			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
 		}
+	}
+
+	.no-select {
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
 	}
 </style>
