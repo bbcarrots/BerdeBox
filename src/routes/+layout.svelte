@@ -8,7 +8,7 @@
 	import { goto } from '$app/navigation';
 	import { updateBoxesStore } from '$lib/utils/storeFunctions';
 	import Loader from '$lib/components/Loader.svelte';
-	import { loading } from '$lib/stores/Page';
+	import { loading, retrievingBoxes } from '$lib/stores/Page';
 	import { page } from '$app/stores';
 
 	if ($page.url.pathname == "/") {
@@ -16,19 +16,20 @@
     }
 
 	onMount(() => {
-
+		
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
 			
 			// If authentication succeeds
 			if (user) {
+				retrievingBoxes.set(true)
 				let validUser = await getUserbyID(user.uid); 
 
 				// If the user exists, update the user store
 				// then update the boxes store based on user inforation
 				// then redirect to /boxes
 				if (validUser !== null) {
-					
+
 					UserStore.set({
 						uid: user.uid,
 						notifToken: validUser?.notifToken,
@@ -36,7 +37,8 @@
 						notifsPermitted: validUser?.notifsPermitted
 					});
 
-					updateBoxesStore($UserStore.boxes)
+					await updateBoxesStore($UserStore.boxes)
+					retrievingBoxes.set(false)
 					goto('/boxes');
 				}
 
@@ -46,6 +48,7 @@
 				// then reroute to /boxes
 				else {
 					addUser(user.uid);
+					retrievingBoxes.set(true)
 
 					let validUser = await getUserbyID(user.uid); // Await the promise
 
@@ -55,7 +58,6 @@
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
-
 					goto('/boxes');
 				}
 			} 
