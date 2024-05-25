@@ -82,12 +82,12 @@
 	}
 </script>
 
-<section class="h-full {openCodeForm ? 'overflow-hidden' : ''}">
+<section class="h-svh {openCodeForm ? 'overflow-hidden' : ''}">
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
 		<div
 			in:fly={{ x: 3000, y: 0 }}
-			class="z-20 grid grid-cols-1 w-full h-full bg-[#EEF2F5] absolute"
+			class="z-20 grid grid-cols-1 w-full h-svh bg-[#EEF2F5] absolute"
 		>
 			<!-- Form Content -->
 			<div class="flex flex-col items-center">
