@@ -86,7 +86,7 @@
 	{#if openCodeForm}
 		<!-- Code Form Popup -->
 		<div
-			transition:fly={{ x: 3000, y: 0 }}
+			in:fly={{ x: 3000, y: 0 }}
 			class="z-20 grid grid-cols-1 w-full h-full bg-[#EEF2F5] absolute"
 		>
 			<!-- Form Content -->
@@ -140,10 +140,7 @@
 
 			<Nav></Nav>
 		</section>
-		<section
-			transition:fly={{ x: -3000, y: 0 }}
-			class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full"
-		>
+		<section in:fly={{ x: -3000, y: 0 }} class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
 			{#key $Boxes}
 				{#if isRetrievingBoxes}
 					<div
