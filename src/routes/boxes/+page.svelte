@@ -107,7 +107,7 @@
 				<div
 					class="grid w-full md:max-w-[600px] h-[calc(100%-60px)] m-0 md:absolute md:h-[90%] md:content-center"
 				>
-					<form class="flex flex-col md:justify-normal gap-8 justify-between h-full p-8">
+					<form class="flex flex-col md:justify-normal gap-8 h-full p-8">
 						<div class="grid gap-4">
 							<label for="boxID">
 								<h4>Box Code</h4>
@@ -134,6 +134,7 @@
 			</div>
 		</div>
 	{/if}
+
 	<body class="grid gap-4 mx-4">
 		<section class="grid gap-4">
 			<HomeHeader></HomeHeader>

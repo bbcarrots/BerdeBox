@@ -22,7 +22,6 @@
 			if (user) {
 				retrievingBoxes.set(true);
 				let validUser = await getUserbyID(user.uid);
-				console.log(user.displayName);
 
 				// If the user exists, update the user store
 				// then update the boxes store based on user inforation
