@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { onDestroy } from 'svelte';
 
 	export let boxType;
@@ -55,41 +55,39 @@
 >
 	<div id="lock" class="like"></div>
 
-	<div class="grid items-center justify-center p-6 no-select">
+	<div class="grid items-center justify-center p-4 no-select">
 		{#if !open}
-			<div class="flex gap-4 flex-col items-center justify-center">
+			<div class="flex gap-2 flex-col items-center justify-center">
 				<!-- Header -->
 				<h5>{boxType}</h5>
 
 				<!-- Image and lock -->
-				<div class="w-[70%] relative flex justify-center items-center">
-					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" />
+				<div class="relative flex justify-center items-center">
+					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
 					<div class="scale-in absolute flex justify-center items-center w-full h-full">
 						<div
-							class={holding === true
-								? 'loader bg-bb-black w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'
-								: 'bg-bb-dark-green w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'}
+							class={holding
+								? 'loader bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'
+								: 'bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'}
 						>
 							<div
-								class="flex flex-col bg-black w-[100px] h-[50px] rounded-full justify-center items-center"
+								class="flex flex-col bg-black rounded-full justify-center items-center overflow-hidden"
 							>
 								<span class:rotate={holding}>
 									{#if holding}
 										<video
-											width="24"
-											height="24"
 											autoplay
 											controls={false}
 											on:click={() => {
 												return false;
 											}}
-											class="-rotate-45'"
+											class=" w-[60%] ml-[20%] aspect-square"
 										>
 											<source src="/icons/lock.mp4" type="video/mp4" />
 											<track kind="captions" />
 										</video>
 									{:else}
-										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[24px]" />
+										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[60%] ml-[20%]" />
 									{/if}
 								</span>
 							</div>
@@ -98,28 +96,28 @@
 				</div>
 
 				<!-- Locked Text -->
-				<div class="flex flex-col -gap-1 text-bb-dark-green">
+				<div class="flex flex-col -gap-0 text-bb-dark-green">
 					<p>Locked</p>
 					<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
 				</div>
 			</div>
 		{:else}
-			<div class="flex gap-4 flex-col items-center justify-center">
+			<div class="flex gap-2 flex-col items-center justify-center">
 				<!-- Header -->
 				<h5>{boxType}</h5>
 
 				<!-- Image and lock -->
-				<div class="w-[70%] relative flex justify-center items-center">
-					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" />
+				<div class="relative flex justify-center items-center">
+					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
 					<div class="absolute flex justify-center items-center w-full h-full">
 						<div class="scale-out">
 							<div
 								class={holding
-									? 'loader bg-bb-black w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'
-									: 'bg-bb-dark-green w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'}
+									? 'loader bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'
+									: 'bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'}
 							>
 								<div
-									class="flex flex-col bg-black w-[100px] h-[50px] rounded-full justify-center items-center"
+									class="flex flex-col bg-black w-[25px] h-[25px] rounded-full justify-center items-center"
 								>
 									<span>
 										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[24px]" />
@@ -180,8 +178,6 @@
 	}
 
 	.loader {
-		width: 50px;
-		height: 50px;
 		aspect-ratio: 1;
 		border-radius: 50%;
 		position: relative;
