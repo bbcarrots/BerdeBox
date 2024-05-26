@@ -74,7 +74,7 @@
 </script>
 
 {#if $loading == false}
-	<body class="h-svh bg-[#EEF2F5]">
+	<body class="h-svh bg-[#F0F5F4]">
 		<slot />
 	</body>
 {:else}
