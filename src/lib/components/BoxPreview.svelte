@@ -38,10 +38,12 @@
 					>
 						<h6>{message}</h6>
 					</div>
-				{:else}
+				{:else if status == 'error'}
 					<div class="bg-red-600/[0.80] absolute bottom-2 left-4 px-3 py-2 text-white rounded-full">
 						<h6>{message}</h6>
 					</div>
+				{:else}
+					<div></div>
 				{/if}
 
 				<!-- Image -->
