@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Icon, ShieldCheck } from 'svelte-hero-icons';
+	import { loading } from '$lib/stores/Page';
+
 	export let src;
 	export let datetime;
 	export let message;
@@ -8,13 +10,19 @@
 
 <button on:click class="w-full h-full min-h-[250px] rounded-[15px] overflow-hidden bg-white -py-10">
 	<div class="flex items-center relative w-full h-full">
-		{#if src == null}
+		{#if $loading}
+			<div class="flex flex-row items-center justify-center w-full aspect-video">
+				<span class="grid gap-0 justify-items-center items-center text-center">
+					<img class="w-[100px]" src={'../icons/boxes-loading.gif'} alt="loading box animation" />
+				</span>
+			</div>
+		{:else if src == null}
 			<!-- Empty State -->
-			<div class="w-full">
-				<div class="flex flex-col items-center text-[#ABABAB]">
+			<div class="flex flex-row items-center justify-center w-full aspect-video">
+				<span class="grid gap-0 justify-items-center items-center text-center text-[#ABABAB]">
 					<Icon src={ShieldCheck} solid size="48" />
 					<p>All deliveries secured!</p>
-				</div>
+				</span>
 			</div>
 		{:else}
 			<!-- Image State -->
