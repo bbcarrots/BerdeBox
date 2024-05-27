@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import { type log, type box } from '$lib/utils/types';
+import { type box } from '$lib/utils/types';
 
 export const Output: Writable<{ [key: string]: boolean | string }> = writable({});
 export const InputOutput: Writable<{ [key: string]: boolean | { [key: string]: boolean } }> =
