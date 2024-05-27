@@ -53,9 +53,7 @@
 	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#D4EDD1] w-full h-full'}
 	disabled={open}
 >
-	<div id="lock" class="like"></div>
-
-	<div class="grid items-center justify-center p-4 no-select">
+	<div class="grid items-center justify-center p-4 pointer-events-none">
 		{#if !open}
 			<div class="flex gap-2 flex-col items-center justify-center">
 				<!-- Header -->
