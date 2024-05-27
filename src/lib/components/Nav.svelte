@@ -25,7 +25,7 @@
 	</div>
 
 	<a href="/settings">
-		<button class="text-bb-dark-green">
+		<button class="text-[#24581E]">
 			<Icon src={Cog8Tooth} solid size="32" />
 		</button>
 	</a>

@@ -1,19 +1,10 @@
 {
   "name": "BerdeBox",
+  "background_color": "#ffffff",
   "description": "Remote Delivery Pickup",
   "display": "standalone",
   "start_url": "/",
   "icons": [    
-    {
-      "src": "/favicon.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/pwa-64x64.png",
-      "sizes": "64x64",
-      "type": "image/png"
-    },
     {
       "src": "/pwa-192x192.png",
       "sizes": "192x192",

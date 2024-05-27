@@ -6,6 +6,15 @@
 	export let datetime;
 	export let message;
 	export let status;
+
+	const options = {
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true,
+	};
 </script>
 
 <button on:click class="w-full h-full min-h-[250px] rounded-[15px] overflow-hidden bg-white -py-10">
@@ -31,7 +40,7 @@
 				<div
 					class="absolute w-full bg-gradient-to-b from-black/[.70] to-transparent text-left text-white p-4 rounded"
 				>
-					<h6 class="left-0">MailBox {datetime.toLocaleString()}</h6>
+					<h6 class="left-0">{datetime.toLocaleString('en-US', options)}</h6>
 				</div>
 				<!-- Notification -->
 				{#if status == 'success'}
