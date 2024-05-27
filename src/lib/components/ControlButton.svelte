@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { onDestroy } from 'svelte';
-	import { Icon, LockClosed } from 'svelte-hero-icons';
 
 	export let boxType;
 	export let open: boolean;
@@ -43,7 +42,7 @@
 		clearTimeout(timer);
 	});
 
-	const holdingClass = 'rounded-[15px] bg-[#B4A5EC] w-full h-full';
+	const holdingClass = 'rounded-[15px] bg-[#578751] w-full h-full text-white';
 </script>
 
 <button
@@ -51,53 +50,134 @@
 	on:mouseup={handleMouseUp}
 	on:touchstart={handleTouchStart}
 	on:touchend={handleTouchEnd}
-	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#E7E2FA] w-full h-full'}
+	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#D4EDD1] w-full h-full'}
 	disabled={open}
 >
-	<div class="grid items-center justify-center p-6 no-select">
+	<div id="lock" class="like"></div>
+
+	<div class="grid items-center justify-center p-4 no-select">
 		{#if !open}
 			<div class="flex gap-2 flex-col items-center justify-center">
-				<div>
-					<h5>{boxType}</h5>
-					<p>Locked</p>
+				<!-- Header -->
+				<h5>{boxType}</h5>
+
+				<!-- Image and lock -->
+				<div class="relative flex justify-center items-center">
+					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
+					<div class="scale-in absolute flex justify-center items-center w-full h-full">
+						<div
+							class={holding
+								? 'loader bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'
+								: 'bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'}
+						>
+							<div
+								class="flex flex-col bg-black rounded-full justify-center items-center overflow-hidden"
+							>
+								<span class:rotate={holding}>
+									{#if holding}
+										<video
+											autoplay
+											controls={false}
+											on:click={() => {
+												return false;
+											}}
+											class=" w-[60%] ml-[20%] aspect-square -rotate-45"
+										>
+											<source src="/icons/lock.mp4" type="video/mp4" />
+											<track kind="captions" />
+										</video>
+									{:else}
+										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[60%] ml-[20%]" />
+									{/if}
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<div
-					class={holding === true
-						? 'loader bg-bb-black w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'
-						: 'bg-bb-black w-[50px] h-[50px] flex items-center justify-center rounded-full text-white'}
-				>
-					<span class={holding === true ? '-rotate-45' : ''}>
-						<Icon src={LockClosed} outline size="24" class="inline-block" />
-					</span>
+				<!-- Locked Text -->
+				<div class="flex flex-col -gap-0 text-bb-dark-green">
+					<p>Locked</p>
+					<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
 				</div>
-				<h6 class="mt-2">Hold to open</h6>
 			</div>
 		{:else}
-			<div class="flex gap-2 flex-col items-center justify-center text-[#8A8A8A]">
-				<div>
-					<h5>{boxType}</h5>
-					<p>Unlocked</p>
+			<div class="flex gap-2 flex-col items-center justify-center">
+				<!-- Header -->
+				<h5>{boxType}</h5>
+
+				<!-- Image and lock -->
+				<div class="relative flex justify-center items-center">
+					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
+					<div class="absolute flex justify-center items-center w-full h-full">
+						<div class="scale-out">
+							<div
+								class={holding
+									? 'loader bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'
+									: 'bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'}
+							>
+								<div
+									class="flex flex-col bg-black w-[25px] h-[25px] rounded-full justify-center items-center"
+								>
+									<span>
+										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[24px]" />
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<div
-					class="bg-[#8A8A8A] w-[50px] h-[50px] flex items-center justify-center rounded-full text-white"
-				>
-					<span class={holding === true ? '-rotate-45' : ''}>
-						<Icon src={LockClosed} outline size="24" class="inline-block" />
-					</span>
+				<!-- Locked Text -->
+				<div class="flex flex-col -gap-1 text-bb-dark-green">
+					<p>Unlocked</p>
+					<h6 class="mt-2 text-bb-dark-green">Wait to lock</h6>
 				</div>
-				<h6 class="mt-2">Reset lock</h6>
 			</div>
 		{/if}
 	</div>
 </button>
 
 <style>
-	/* HTML: <div class="loader"></div> */
+	.scale-out {
+		animation-name: scale-out;
+		animation-duration: 0.5s;
+		animation-fill-mode: forwards;
+		animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+	}
+
+	@keyframes scale-out {
+		0% {
+			transform: scale(1);
+		}
+		10% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(0);
+		}
+	}
+
+	.scale-in {
+		animation-name: scale-in;
+		animation-duration: 0.5s;
+		animation-fill-mode: forwards;
+		animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+	}
+
+	@keyframes scale-in {
+		0% {
+			transform: scale(0);
+		}
+		90% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
 	.loader {
-		width: 50px;
-		height: 50px;
 		aspect-ratio: 1;
 		border-radius: 50%;
 		position: relative;
@@ -109,9 +189,10 @@
 		position: absolute;
 		inset: -5px;
 		border-radius: 50%;
-		border: 5px solid #514b82;
+		border: 5px solid #1f2a27;
 		animation: l18 2s infinite linear;
 	}
+
 	@keyframes l18 {
 		0% {
 			clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);

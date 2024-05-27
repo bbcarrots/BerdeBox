@@ -4,7 +4,8 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'bb-black': "#1D1D1D"
+				'bb-black': '#1D1D1D',
+				'bb-dark-green': '#243531'
 			}
 		}
 	},

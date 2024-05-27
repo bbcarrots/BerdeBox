@@ -3,13 +3,11 @@
 	import ControlButton from '$lib/components/ControlButton.svelte';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Log from '$lib/components/Log.svelte';
-	import { Icon, XMark } from 'svelte-hero-icons';
+	import { Icon, XMark, ChevronLeft } from 'svelte-hero-icons';
 	import { Boxes } from '$lib/stores/IO';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { scale } from 'svelte/transition';
-	import { slide } from 'svelte/transition';
-
 	// --------------------------------------
 	const boxID = Number($page.params.boxID) - 1;
 
@@ -59,8 +57,9 @@
 		onValue(ref($firebaseDBFront, 'berdebox1/input/doorbell_button_is_pressed'), handleDoorbell);
 	});
 
-	const tabbarActiveClasses = 'p-3 bg-white rounded-[15px] m-2 shadow-sm';
-	const tabbarInactiveClasses = 'p-3 m-2';
+	const tabbarActiveClasses =
+		' hit-area transition ease-in-out p-3 bg-white rounded-[15px] m-2 shadow-sm';
+	const tabbarInactiveClasses = 'hit-area p-3 m-2';
 
 	// -------------------------------------------------------- FIREBASE CODE
 	let mainLockIsOpen: boolean = false;
@@ -116,24 +115,41 @@
 	}
 </script>
 
-<section class="h-screen max-h-[screen] overflow-hidden">
+<section class="h-dvh overflow-hidden">
 	<!-- header -->
-	<div class="flex items-center justify-between p-4">
-		<div></div>
-		<h4>Mailbox</h4>
-		<a href="/boxes" class="right-2">
-			<Icon src={XMark} solid size="20" />
+	<div class="flex items-center justify-between px-4 py-6">
+		<a href="/boxes" class="left-2">
+			<Icon src={ChevronLeft} solid size="20" />
 		</a>
+		{#key src}
+			<div in:scale class="bg-white py-2 px-4 rounded-full flex gap-2 items-center">
+				{#if status == 'success'}
+					<div class="w-3 h-3 bg-[#78D96C] rounded-full"></div>
+				{:else if status == 'error'}
+					<div class="w-3 h-3 bg-red-500 rounded-full"></div>
+				{:else}
+					<div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+				{/if}
+				<p class="text-bb-dark-green">{message}</p>
+			</div>
+		{/key}
+
+		<div></div>
 	</div>
 
 	<!-- content -->
-	<div class="grid grid-cols-1 md:grid-cols-5 h-[calc(100%-60px)] m-0 md:m-4 md:h-[90%]">
+
+	<!-- content -->
+	<div class="grid grid-cols-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]">
 		<!-- box preview -->
 		<div transition:scale class="col-span-3 mb-4 md:mr-4">
-			<BoxPreview {src} {datetime} {message} {status}></BoxPreview>
+			<BoxPreview {src} {datetime} {message} status={'none'}></BoxPreview>
 		</div>
 
-		<div class="grid grid-rows-7 md:col-span-2 md:grid-rows-10 w-full h-full">
+		<div
+			transition:fly={{ x: 0, y: 3000 }}
+			class="grid grid-rows-7 md:col-span-2 md:grid-rows-10 w-full h-full"
+		>
 			<!-- tabbar buttons -->
 			<div
 				id="tabbar"
@@ -159,7 +175,6 @@
 
 			<!-- tabbar content -->
 			<div
-				transition:fly={{ x: 0, y: 3000 }}
 				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full mt-2"
 			>
 				{#if isControl}
