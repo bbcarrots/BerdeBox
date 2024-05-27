@@ -25,7 +25,7 @@
 			</button> -->
 		</div>
 	</div>
-	<div class="bg-red-100 w-full h-svh">
+	<div class="w-full h-svh">
 		<img class="object-cover w-full h-full" src="/mockups/berdebox.png" alt="hero" />
 	</div>
 </section>

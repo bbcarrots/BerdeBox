@@ -36,7 +36,7 @@
 				<!-- Notification -->
 				{#if status == 'success'}
 					<div
-						class="bg-emerald-600/[0.80] absolute bottom-2 left-4 px-3 py-2 text-white rounded-full"
+						class="bg-[#78A36E]/[0.80] absolute bottom-2 left-4 px-3 py-2 text-white rounded-full"
 					>
 						<h6>{message}</h6>
 					</div>

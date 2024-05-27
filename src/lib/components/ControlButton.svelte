@@ -96,7 +96,11 @@
 				<!-- Locked Text -->
 				<div class="flex flex-col -gap-0 text-bb-dark-green">
 					<p>Locked</p>
-					<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
+					{#if !holding}
+						<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
+					{:else}
+						<h6 class="mt-2 text-bb-dark-green">Opening</h6>
+					{/if}
 				</div>
 			</div>
 		{:else}
