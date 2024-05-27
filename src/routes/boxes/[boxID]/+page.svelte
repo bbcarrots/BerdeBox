@@ -85,7 +85,7 @@
 		});
 		// console.log(await response.json());
 
-		await asyncTimeout(3000);
+		await asyncTimeout(5000);
 		// console.log('Main Lock should be locked again (UI side only, not DB side)!');
 		mainLockIsOpen = false;
 	}
