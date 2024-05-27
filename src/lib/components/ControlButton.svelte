@@ -81,7 +81,7 @@
 											on:click={() => {
 												return false;
 											}}
-											class=" w-[60%] ml-[20%] aspect-square"
+											class=" w-[60%] ml-[20%] aspect-square -rotate-45"
 										>
 											<source src="/icons/lock.mp4" type="video/mp4" />
 											<track kind="captions" />
@@ -181,7 +181,7 @@
 		aspect-ratio: 1;
 		border-radius: 50%;
 		position: relative;
-		transform: rotate(0deg);
+		transform: rotate(45deg);
 	}
 
 	.loader::before {
