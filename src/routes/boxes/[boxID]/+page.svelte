@@ -3,7 +3,7 @@
 	import ControlButton from '$lib/components/ControlButton.svelte';
 	import BoxPreview from '$lib/components/BoxPreview.svelte';
 	import Log from '$lib/components/Log.svelte';
-	import { Icon, XMark, ChevronLeft } from 'svelte-hero-icons';
+	import { Icon, ChevronLeft } from 'svelte-hero-icons';
 	import { Boxes } from '$lib/stores/IO';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -47,12 +47,16 @@
 		}
 	}
 
-	onMount(() => {
-		src = $Boxes[boxID].logs[0]?.imageURL;
-		datetime = $Boxes[boxID].logs[0]?.datetime;
-		message = $Boxes[boxID].logs[0]?.message;
-		status = $Boxes[boxID].logs[0]?.status;
+	$: {
+		if ($Boxes.length !== 0) {
+			src = $Boxes[boxID].logs[0]?.imageURL;
+			datetime = $Boxes[boxID].logs[0]?.datetime;
+			message = $Boxes[boxID].logs[0]?.message;
+			status = $Boxes[boxID].logs[0]?.status;
+		}
+	}
 
+	onMount(async () => {
 		// -------------------------------------------------------- FIREBASE CODE
 		onValue(ref($firebaseDBFront, 'berdebox1/input/doorbell_button_is_pressed'), handleDoorbell);
 	});
@@ -202,19 +206,21 @@
 					</span>
 				{:else}
 					<div class="h-full overflow-auto overflow-y-scroll">
-						{#each $Boxes[boxID].logs as log, index}
-							{#if index === selectedLogIndex}
-								<Log {log} selected={true} />
-							{:else}
-								<Log
-									on:click={() => {
-										handleLogClick(index);
-									}}
-									{log}
-									selected={false}
-								/>
-							{/if}
-						{/each}
+						{#if $Boxes.length !== 0}
+							{#each $Boxes[boxID].logs as log, index}
+								{#if index === selectedLogIndex}
+									<Log {log} selected={true} />
+								{:else}
+									<Log
+										on:click={() => {
+											handleLogClick(index);
+										}}
+										{log}
+										selected={false}
+									/>
+								{/if}
+							{/each}
+						{/if}
 					</div>
 				{/if}
 			</div>

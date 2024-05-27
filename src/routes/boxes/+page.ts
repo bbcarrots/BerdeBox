@@ -1,5 +1,5 @@
-import { loading } from '$lib/stores/Page.js';
+import { loginLoading } from '$lib/stores/Page.js';
 
 export function load() {
-    loading.set(false);
+	loginLoading.set(false);
 }

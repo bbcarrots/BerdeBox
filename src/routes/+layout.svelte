@@ -10,16 +10,30 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import { loading, retrievingBoxes } from '$lib/stores/Page';
 	import { page } from '$app/stores';
+	import { onValue } from 'firebase/database';
+	import { firebaseDBFront } from '$lib/stores/FirebaseClient';
+	import { ref } from 'firebase/database';
+	import { loginLoading } from '$lib/stores/Page';
 
 	if ($page.url.pathname == '/') {
-		loading.set(true);
+		loginLoading.set(true);
 	}
+	loading.set(true);
 
 	onMount(() => {
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
 			// If authentication succeeds
 			if (user) {
+				onValue(ref($firebaseDBFront, 'berdebox1/output/take_photo'), async (snapshot: any) => {
+					const take_photo = snapshot.val();
+
+					// reload the logs when the take_photo is false
+					if (take_photo == false) {
+						await updateBoxesStore($UserStore.boxes);
+					}
+				});
+
 				retrievingBoxes.set(true);
 				let validUser = await getUserbyID(user.uid);
 
@@ -37,8 +51,12 @@
 					});
 
 					await updateBoxesStore($UserStore.boxes);
+					loading.set(false);
+
 					retrievingBoxes.set(false);
-					goto('/boxes');
+					if ($page.url.pathname == '/') {
+						goto('/boxes');
+					}
 				}
 
 				// If the user doesn't exist yet
@@ -59,13 +77,17 @@
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
-					goto('/boxes');
+					if ($page.url.pathname == '/') {
+						goto('/boxes');
+					}
 				}
 			}
 
 			// If authentication fails
 			else {
+				loginLoading.set(false);
 				loading.set(false);
+
 				// Handle the case where there's no user
 				console.log('No user is signed in');
 			}
@@ -73,7 +95,7 @@
 	});
 </script>
 
-{#if $loading == false}
+{#if $loginLoading == false}
 	<body class="h-svh bg-[#F0F5F4]">
 		<slot />
 	</body>
