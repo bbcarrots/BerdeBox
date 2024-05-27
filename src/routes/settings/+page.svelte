@@ -16,6 +16,7 @@
 	import { goto } from '$app/navigation';
 	import SmallLoader from '$lib/components/SmallLoader.svelte';
 	import { fly } from 'svelte/transition';
+	import ProfilePhoto from '$lib/components/ProfilePhoto.svelte';
 
 	let messages = []; //array of messages received
 	let messaging: any;
@@ -176,9 +177,10 @@
 	}
 </script>
 
-<section transition:fly={{ x: 3000, y: 0 }} class="h-calc([100%-20px]) max-h-screen">
-	<div class="z-20 grid grid-cols-1 w-full h-screen bg-[#EEF2F5] absolute">
+<section transition:fly={{ x: 3000, y: 0 }} class="h-calc([100%-20px]) max-h-svh">
+	<div class="z-20 grid grid-cols-1 w-full h-svh bg-[#EEF2F5] absolute">
 		<div class="flex flex-col items-center">
+
 			<!-- Header -->
 			<div class="flex items-center justify-between p-4 w-full my-4">
 				<button
@@ -193,8 +195,16 @@
 				<div></div>
 			</div>
 
+
 			<!-- SETTING ITEMS -->
 			<div class="w-[95%]">
+				<!-- User profile -->
+				<div class="w-full flex flex-col items-center gap-3">
+					<ProfilePhoto></ProfilePhoto>
+					<h4>{$UserStore.name}</h4>
+				</div>
+
+
 				<p class="w-full p-2 my-2">General</p>
 
 				<!-- Main settings group -->
