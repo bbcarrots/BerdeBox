@@ -119,9 +119,9 @@
 	}
 </script>
 
-<section class="h-dvh overflow-hidden">
+<section class="h-svh relative">
 	<!-- header -->
-	<div class="flex items-center justify-between px-4 py-6">
+	<div class="sticky top-0 z-10 bg-[#F0F5F4] flex items-center justify-between px-4 py-6">
 		<a href="/boxes" class="left-2">
 			<Icon src={ChevronLeft} solid size="20" />
 		</a>
@@ -140,9 +140,6 @@
 
 		<div></div>
 	</div>
-
-	<!-- content -->
-
 	<!-- content -->
 	<div class="grid grid-cols-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]">
 		<!-- box preview -->
@@ -179,7 +176,7 @@
 
 			<!-- tabbar content -->
 			<div
-				class="min-h-full h-0 row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full mt-2"
+				class="h-full row-span-6 md:row-span-9 bg-white items-center justify-center rounded-t-[15px] md:rounded-b-[15px] md:mb-4 p-4 w-full mt-2"
 			>
 				{#if isControl}
 					<span class="grid h-full gap-4 grid-cols-2">

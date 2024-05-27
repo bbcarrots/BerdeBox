@@ -50,12 +50,10 @@
 	on:mouseup={handleMouseUp}
 	on:touchstart={handleTouchStart}
 	on:touchend={handleTouchEnd}
-	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#D4EDD1] w-full h-full'}
+	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#D4EDD1]'}
 	disabled={open}
 >
-	<div id="lock" class="like"></div>
-
-	<div class="grid items-center justify-center p-4 no-select">
+	<div class="grid items-center justify-center p-4 pointer-events-none">
 		{#if !open}
 			<div class="flex gap-2 flex-col items-center justify-center">
 				<!-- Header -->
@@ -67,11 +65,11 @@
 					<div class="scale-in absolute flex justify-center items-center w-full h-full">
 						<div
 							class={holding
-								? 'loader bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'
-								: 'bg-black w-[20%] aspect-square flex items-center justify-center rounded-full text-white'}
+								? 'loader bg-black w-[20%] aspect-square flex rounded-full text-white'
+								: 'bg-black w-[20%] aspect-square flex rounded-full text-white'}
 						>
 							<div
-								class="flex flex-col bg-black rounded-full justify-center items-center overflow-hidden"
+								class="flex flex-col justify-center items-center"
 							>
 								<span class:rotate={holding}>
 									{#if holding}
@@ -87,7 +85,7 @@
 											<track kind="captions" />
 										</video>
 									{:else}
-										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[60%] ml-[20%]" />
+										<img src={'/icons/lockStaticClosed.gif'} alt="static lock" class="w-[60%] ml-[20%]" />
 									{/if}
 								</span>
 							</div>
@@ -98,7 +96,11 @@
 				<!-- Locked Text -->
 				<div class="flex flex-col -gap-0 text-bb-dark-green">
 					<p>Locked</p>
-					<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
+					{#if !holding}
+						<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
+					{:else}
+						<h6 class="mt-2 text-bb-dark-green">Opening</h6>
+					{/if}
 				</div>
 			</div>
 		{:else}
@@ -120,7 +122,7 @@
 									class="flex flex-col bg-black w-[25px] h-[25px] rounded-full justify-center items-center"
 								>
 									<span>
-										<img src={'/icons/lockStatic.gif'} alt="static lock" class="w-[24px]" />
+										<img src={'/icons/lockStaticOpened.gif'} alt="static lock" class="w-[24px]" />
 									</span>
 								</div>
 							</div>
