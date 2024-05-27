@@ -172,9 +172,9 @@
 					openCodeForm = true;
 				}}
 			>
-				<div class="flex flex-col items-center space-y-2">
-					<Icon src={Plus} solid size="36" />
-					<p>Add a new BerdeBox</p>
+				<div class="flex flex-col items-center space-y-2 text-bb-dark-green">
+					<Icon src={Plus} solid size="44" />
+					<h4>Add a new BerdeBox</h4>
 				</div>
 			</button>
 		</section>

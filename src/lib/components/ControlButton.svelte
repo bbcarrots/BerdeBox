@@ -94,12 +94,12 @@
 				</div>
 
 				<!-- Locked Text -->
-				<div class="flex flex-col -gap-0 text-bb-dark-green">
+				<div class={holding ? "flex flex-col -gap-0 text-white": "flex flex-col -gap-0 text-bb-dark-green"}>
 					<p>Locked</p>
 					{#if !holding}
-						<h6 class="mt-2 text-bb-dark-green">Hold to open</h6>
+						<h6 class="mt-2 ">Hold to open</h6>
 					{:else}
-						<h6 class="mt-2 text-bb-dark-green">Opening</h6>
+						<h6 class="mt-2 ">Opening</h6>
 					{/if}
 				</div>
 			</div>
