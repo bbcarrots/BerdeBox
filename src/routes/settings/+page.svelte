@@ -199,12 +199,6 @@
 				<p class="w-full p-2 my-2">General</p>
 
 				<!-- Main settings group -->
-				<button
-					on:click={() => {
-						requestPermission();
-					}}>Request Permissions</button
-				>
-
 				<div class="grid bg-white w-full p-1 gap-1 rounded-[15px] border border-[#D9D9D9]/[.5]">
 					<!-- Enable notification toggle -->
 					<button
