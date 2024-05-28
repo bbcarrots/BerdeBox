@@ -67,6 +67,7 @@
 		Notification.requestPermission().then(async (permission) => {
 			// if the permission has been granted, get the token
 			if (permission === 'granted') {
+				// get the user token, then subscribe to the alerts
 				getUserToken();
 				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			}
@@ -143,6 +144,8 @@
 		// if the notifs were not permitted
 		else {
 			console.log('subscribing', $UserStore.notifToken);
+			// check if permissions have been granted
+			checkPermissions();
 			// update the user store to set it to false
 			await getUserToken();
 			// subscribe to the topic
