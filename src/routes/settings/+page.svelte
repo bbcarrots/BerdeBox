@@ -145,11 +145,8 @@
 		else {
 			console.log('subscribing', $UserStore.notifToken);
 			// check if permissions have been granted
+			// check permissions already checks if the permissions have been granted
 			checkPermissions();
-			// update the user store to set it to false
-			await getUserToken();
-			// subscribe to the topic
-			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			loading = false;
 		}
 	}
