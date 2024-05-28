@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { scale } from 'svelte/transition';
+
 	// --------------------------------------
 	const boxID = Number($page.params.boxID) - 1;
 
@@ -17,6 +18,7 @@
 	let datetime: Date;
 	let message: string;
 	let status: string;
+	let takePhoto:boolean = false;
 
 	function handleLogClick(index: number) {
 		selectedLogIndex = index;
@@ -29,6 +31,27 @@
 	// -------------------------------------------------------- FIREBASE CODE
 	import { firebaseDBFront } from '$lib/stores/FirebaseClient';
 	import { onValue, ref, update } from 'firebase/database';
+
+	onValue(ref($firebaseDBFront, 'berdebox1/output/'), async (snapshot: any) => {
+		const output = snapshot.val();
+
+		console.log(output)
+
+		takePhoto = output.take_photo;
+
+		if (output.main_lock_is_open == false && output.take_photo == false){
+			mainLockIsOpen = false;
+		}
+		if (output.modules.cb1_is_open == false && output.take_photo == false){
+			cashBoxes.cb1 = false;
+		}
+		if (output.modules.cb2_is_open == false && output.take_photo == false){
+			cashBoxes.cb2 = false;
+		}
+		if (output.modules.cb2_is_open == false && output.take_photo == false){
+			cashBoxes.cb3 = false;
+		}
+	});
 
 	let isDoorbellRung: boolean = false;
 
@@ -76,7 +99,7 @@
 	async function handleMainLockOpen() {
 		/* Handles Open Main Lock event from Main Lock button by sending a PATCH request
         with payload requirement: boxCode. */
-
+		mainLockIsOpen = true;
 		const payload = { boxCode: 'berdebox' + $page.params.boxID.toString() };
 
 		// console.log('Main Lock should be open!');
@@ -89,14 +112,14 @@
 		});
 		// console.log(await response.json());
 
-		await asyncTimeout(5000);
+		// await asyncTimeout(5000);
 		// console.log('Main Lock should be locked again (UI side only, not DB side)!');
-		mainLockIsOpen = false;
 	}
 
 	async function handleOpenCashBox(cashBoxID: number) {
 		/* Handles Open Cash Box Lock event from Cash Box Lock button by sending a PATCH request
         with payload requirement: cashBoxCode. */
+		cashBoxes['cb' + cashBoxID.toString()] = true;
 
 		const payload = {
 			boxCode: 'berdebox' + $page.params.boxID.toString(),
@@ -113,9 +136,8 @@
 		});
 		// console.log(await response.json());
 
-		await asyncTimeout(3000);
+		// await asyncTimeout(3000);
 		// console.log('Cash Box Lock should be locked again (UI side only, not DB side)!');
-		cashBoxes['cb' + cashBoxID.toString()] = false;
 	}
 </script>
 
@@ -184,21 +206,25 @@
 							boxType={'Mailbox 1'}
 							bind:open={mainLockIsOpen}
 							on:held={handleMainLockOpen}
+							isDisabled={takePhoto}
 						></ControlButton>
 						<ControlButton
 							boxType={'Cashbox 1'}
 							bind:open={cashBoxes.cb1}
 							on:held={() => handleOpenCashBox(1)}
+							isDisabled={takePhoto}
 						></ControlButton>
 						<ControlButton
 							boxType={'Cashbox 2'}
 							bind:open={cashBoxes.cb2}
 							on:held={() => handleOpenCashBox(2)}
+							isDisabled={takePhoto}
 						></ControlButton>
 						<ControlButton
 							boxType={'Cashbox 3'}
 							bind:open={cashBoxes.cb3}
 							on:held={() => handleOpenCashBox(3)}
+							isDisabled={takePhoto}
 						></ControlButton>
 					</span>
 				{:else}
