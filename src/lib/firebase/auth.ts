@@ -15,34 +15,37 @@ provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 // update language code on Auth instance to localize provider's OAuth flow
 auth.languageCode = 'it';
 
-//redirect on auth
-signInWithPopup(auth, provider)
-	.then((result) => {
-		// This gives you a Google Access Token. You can use it to access Google APIs.
-		let credential = null; // Initialize credential as null
+// //redirect on auth
+// const login = () => {
 
-		if (result) {
-			credential = GoogleAuthProvider.credentialFromResult(result);
-			const user = result.user;
-			console.log(user);
-		}
-		const token = credential?.accessToken;
+// 	signInWithPopup(auth, provider)
+// 	.then((result) => {
+// 		// This gives you a Google Access Token. You can use it to access Google APIs.
+// 		let credential = null; // Initialize credential as null
 
-		// The signed-in user info.
-		const user = result?.user;
-		// IdP data available using getAdditionalUserInfo(result)
-		// ...
-	})
-	.catch((error) => {
-		// Handle Errors here.
-		const errorCode = error.code;
-		const errorMessage = error.message;
-		// The email of the user's account used.
-		const email = error.customData.email;
-		// The AuthCredential type that was used.
-		const credential = GoogleAuthProvider.credentialFromError(error);
-		// ...
-	});
+// 		if (result) {
+// 			credential = GoogleAuthProvider.credentialFromResult(result);
+// 			const user = result.user;
+// 			console.log(user);
+// 		}
+// 		const token = credential?.accessToken;
+
+// 		// The signed-in user info.
+// 		const user = result?.user;
+// 		// IdP data available using getAdditionalUserInfo(result)
+// 		// ...
+// 	})
+// 	.catch((error) => {
+// 		// Handle Errors here.
+// 		const errorCode = error.code;
+// 		const errorMessage = error.message;
+// 		// The email of the user's account used.
+// 		const email = error.customData.email;
+// 		// The AuthCredential type that was used.
+// 		const credential = GoogleAuthProvider.credentialFromError(error);
+// 		// ...
+// 	});
+// }
 
 //needs to be in a function since firebaseui needs to be dynamically imported
 export async function getUIConfig() {
@@ -52,7 +55,8 @@ export async function getUIConfig() {
 		tosUrl: '/',
 		privacyPolicyUrl: function () {
 			window.location.assign('/');
-		}
+		},
+		signInFlow: "popup"
 	};
 }
 
