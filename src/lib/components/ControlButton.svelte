@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { onDestroy } from 'svelte';
 
+	export let isDisabled: boolean = false;
 	export let boxType;
 	export let open: boolean;
 
@@ -45,102 +46,122 @@
 	const holdingClass = 'rounded-[15px] bg-[#578751] w-full h-full text-white';
 </script>
 
-<button
-	on:mousedown={handleMouseDown}
-	on:mouseup={handleMouseUp}
-	on:touchstart={handleTouchStart}
-	on:touchend={handleTouchEnd}
-	class={holding === true ? holdingClass : 'rounded-[15px] bg-[#D4EDD1]'}
-	disabled={open}
->
-	<div class="grid items-center justify-center p-4 pointer-events-none">
-		{#if !open}
-			<div class="flex gap-2 flex-col items-center justify-center">
-				<!-- Header -->
-				<h5>{boxType}</h5>
+	<button
+		on:mousedown={handleMouseDown}
+		on:mouseup={handleMouseUp}
+		on:touchstart={handleTouchStart}
+		on:touchend={handleTouchEnd}
+		class={isDisabled ? 'pointer-events-none rounded-[15px] bg-[#D4EDD1] unselectable' : holding ? holdingClass : 'rounded-[15px] bg-[#D4EDD1]'}
+		disabled={open}
+	>
+		<div class="grid items-center justify-center p-4 pointer-events-none">
+			{#if !open}
+				<div class="flex gap-2 flex-col items-center justify-center">
+					<!-- Header -->
+					<h5>{boxType}</h5>
 
-				<!-- Image and lock -->
-				<div class="relative flex justify-center items-center">
-					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
-					<div class="scale-in absolute flex justify-center items-center w-full h-full">
-						<div
-							class={holding
-								? 'loader bg-black w-[20%] aspect-square flex rounded-full text-white'
-								: 'bg-black w-[20%] aspect-square flex rounded-full text-white'}
-						>
+					<!-- Image and lock -->
+					<div class="relative flex justify-center items-center">
+						<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
+						<div class="scale-in absolute flex justify-center items-center w-full h-full">
 							<div
-								class="flex flex-col justify-center items-center"
-							>
-								<span class:rotate={holding}>
-									{#if holding}
-										<video
-											autoplay
-											controls={false}
-											on:click={() => {
-												return false;
-											}}
-											class=" w-[60%] ml-[20%] aspect-square -rotate-45"
-										>
-											<source src="/icons/lock.mp4" type="video/mp4" />
-											<track kind="captions" />
-										</video>
-									{:else}
-										<img src={'/icons/lockStaticClosed.gif'} alt="static lock" class="w-[60%] ml-[20%]" />
-									{/if}
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Locked Text -->
-				<div class={holding ? "flex flex-col -gap-0 text-white": "flex flex-col -gap-0 text-bb-dark-green"}>
-					<p>Locked</p>
-					{#if !holding}
-						<h6 class="mt-2 ">Hold to open</h6>
-					{:else}
-						<h6 class="mt-2 ">Opening</h6>
-					{/if}
-				</div>
-			</div>
-		{:else}
-			<div class="flex gap-2 flex-col items-center justify-center">
-				<!-- Header -->
-				<h5>{boxType}</h5>
-
-				<!-- Image and lock -->
-				<div class="relative flex justify-center items-center">
-					<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
-					<div class="absolute flex justify-center items-center w-full h-full">
-						<div class="scale-out">
-							<div
-								class={holding
-									? 'loader bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'
-									: 'bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'}
+								class={isDisabled ? "bg-[#ABABAB]/[0.7] w-[40px] h-[40px] flex items-center justify-center rounded-full" 
+									: 
+									holding
+									? 'loader bg-black w-[20%] aspect-square flex rounded-full text-white'
+									: 'bg-black w-[20%] aspect-square flex rounded-full text-white'}
 							>
 								<div
-									class="flex flex-col bg-black w-[25px] h-[25px] rounded-full justify-center items-center"
+									class="flex flex-col justify-center items-center"
 								>
-									<span>
-										<img src={'/icons/lockStaticOpened.gif'} alt="static lock" class="w-[24px]" />
+									<span class:rotate={holding}>
+										{#if holding}
+											<video
+												autoplay
+												controls={false}
+												on:click={() => {
+													return false;
+												}}
+												class=" w-[60%] ml-[20%] aspect-square -rotate-45"
+											>
+												<source src="/icons/lock.mp4" type="video/mp4" />
+												<track kind="captions" />
+											</video>
+										{:else}
+											<img src={'/icons/lockStaticClosed.png'} alt="static lock" class="w-[58%] ml-[20%] mb-[1%]" />
+										{/if}
 									</span>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<!-- Locked Text -->
-				<div class="flex flex-col -gap-1 text-bb-dark-green">
-					<p>Unlocked</p>
-					<h6 class="mt-2 text-bb-dark-green">Wait to lock</h6>
+					<!-- Locked Text -->
+					<div class={holding ? "flex flex-col -gap-0 text-white": "flex flex-col -gap-0 text-bb-dark-green"}>
+						{#if isDisabled}
+							<p>Locked</p>
+							<h6 class="mt-2 ">Wait for photo</h6>
+						{:else}
+							<p>Locked</p>
+							{#if !holding}
+								<h6 class="mt-2 ">Hold to open</h6>
+							{:else}
+								<h6 class="mt-2 ">Opening</h6>
+							{/if}
+						{/if}
+					</div>
 				</div>
-			</div>
-		{/if}
-	</div>
-</button>
+			{:else}
+				<div class="flex gap-2 flex-col items-center justify-center">
+					<!-- Header -->
+					<h5>{boxType}</h5>
+
+					<!-- Image and lock -->
+					<div class="relative flex justify-center items-center">
+						<img src={'/mockups/mailbox.png'} alt="mailbox mockup" class="w-[40%] md:w-[50%]" />
+						<div class="absolute flex justify-center items-center w-full h-full">
+							<div class="scale-out">
+								<div
+									class={holding
+										? 'loader bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'
+										: 'bg-black w-[40px] h-[40px] flex items-center justify-center rounded-full text-white'}
+								>
+									<div
+										class="flex flex-col bg-black w-[25px] h-[25px] rounded-full justify-center items-center"
+									>
+										<span>
+											<img src={'/icons/lockStaticOpened.gif'} alt="static lock" class="w-[24px]" />
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Locked Text -->
+					<div class="flex flex-col -gap-1 text-bb-dark-green">
+						<p>Unlocked</p>
+						<h6 class="mt-2 text-bb-dark-green">Wait to lock</h6>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</button>
 
 <style>
+	.unselectable {
+		-moz-user-select: -moz-none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+
+		/*
+			Introduced in IE 10.
+			See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+		*/
+		-ms-user-select: none;
+		user-select: none;
+	}
+
 	.scale-out {
 		animation-name: scale-out;
 		animation-duration: 0.5s;
