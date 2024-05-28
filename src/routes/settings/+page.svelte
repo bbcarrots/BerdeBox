@@ -49,7 +49,7 @@
 		// requestPermission();
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
-			console.log(payload.notification?.title);
+			console.log('title', payload.notification?.title);
 			const notificationOptions = {
 				body: payload.notification?.body
 			};
@@ -62,6 +62,8 @@
 
 	// funciton to request permission for notifications
 	function requestPermission() {
+		console.log('requesting permission');
+
 		Notification.requestPermission().then((permission) => {
 			// if the permission has been granted, get the token
 			if (permission === 'granted') {
@@ -71,11 +73,13 @@
 	}
 
 	function getUserToken() {
+		console.log('getting token');
 		getToken(messaging, {
 			vapidKey:
 				'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
 		})
 			.then(async (fetchedToken) => {
+				console.log('token', fetchedToken);
 				//update firestore user information with token
 				await updateUserStore(fetchedToken);
 			})
@@ -89,7 +93,7 @@
 		if (window.Notification) {
 			if (Notification.permission === 'granted') {
 			} else if (Notification.permission !== 'denied') {
-				Notification.requestPermission((permission) => {
+				Notification.requestPermission(async (permission) => {
 					if (permission === 'granted') {
 						UserStore.set({
 							name: $UserStore.name,
@@ -99,6 +103,7 @@
 							boxes: $UserStore.boxes,
 							notifsPermitted: true
 						});
+						await updateUserToken($UserStore.uid, $UserStore.notifToken);
 					}
 				});
 			}
@@ -130,6 +135,7 @@
 	}
 
 	async function handleNotifToggle(value: boolean) {
+		console.log('loading loading');
 		loading = true;
 
 		// if the notifs were permitted,
@@ -142,6 +148,7 @@
 		}
 		// if the notifs were not permitted
 		else {
+			await checkPermissions();
 			console.log('subscribing', $UserStore.notifToken);
 			await getUserToken();
 			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
@@ -150,7 +157,7 @@
 	}
 
 	async function updateUserStore(fetchedToken: any) {
-		console.log($UserStore.uid);
+		console.log('user store', $UserStore.uid, $UserStore.notifToken);
 		await updateUserToken($UserStore.uid, fetchedToken);
 
 		if (fetchedToken == '') {
@@ -180,7 +187,6 @@
 <section transition:fly={{ x: 3000, y: 0 }} class="h-calc([100%-20px]) max-h-svh">
 	<div class="z-20 grid grid-cols-1 w-full h-svh bg-[#EEF2F5] absolute">
 		<div class="flex flex-col items-center">
-
 			<!-- Header -->
 			<div class="flex items-center justify-between p-4 w-full my-4">
 				<button
@@ -195,7 +201,6 @@
 				<div></div>
 			</div>
 
-
 			<!-- SETTING ITEMS -->
 			<div class="w-[95%]">
 				<!-- User profile -->
@@ -203,7 +208,6 @@
 					<ProfilePhoto></ProfilePhoto>
 					<h4>{$UserStore.name}</h4>
 				</div>
-
 
 				<p class="w-full p-2 my-2">General</p>
 
