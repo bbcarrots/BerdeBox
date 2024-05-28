@@ -30,6 +30,19 @@
 	}
 
 	onMount(() => {
+		//register the service worker before everything else
+		if (navigator.serviceWorker) {
+			// Register the SW
+			navigator.serviceWorker
+				.register('firebase-messaging-sw.js')
+				.then(function (registration) {
+					console.log('Service Worker registered with scope:', registration.scope);
+				})
+				.catch(function (error) {
+					console.error('Service Worker registration failed:', error);
+				});
+		}
+
 		messaging = getMessaging(firebaseApp);
 
 		onMessage(messaging, (payload) => {
@@ -53,6 +66,7 @@
 
 		Notification.requestPermission().then(async (permission) => {
 			// if the permission has been granted, get the token
+			console.log('requested permission');
 			if (permission === 'granted') {
 				// get the user token, then subscribe to the alerts
 				getUserToken();
@@ -198,6 +212,12 @@
 				<p class="w-full p-2 my-2">General</p>
 
 				<!-- Main settings group -->
+				<button
+					on:click={() => {
+						requestPermission();
+					}}>Request Permissions</button
+				>
+
 				<div class="grid bg-white w-full p-1 gap-1 rounded-[15px] border border-[#D9D9D9]/[.5]">
 					<!-- Enable notification toggle -->
 					<button
