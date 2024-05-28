@@ -43,10 +43,8 @@
 				});
 		}
 
-		checkPermissions();
-
 		messaging = getMessaging(firebaseApp);
-		// requestPermission();
+
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
 			console.log(payload.notification?.title);
@@ -58,19 +56,25 @@
 				new Notification(payload.notification?.title, notificationOptions);
 			}
 		});
+
+		// check the user's permissions
+		checkPermissions();
 	});
 
-	// funciton to request permission for notifications
 	function requestPermission() {
-		Notification.requestPermission().then((permission) => {
+		// Request for notification permissions from the user
+
+		Notification.requestPermission().then(async (permission) => {
 			// if the permission has been granted, get the token
 			if (permission === 'granted') {
 				getUserToken();
+				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			}
 		});
 	}
 
 	function getUserToken() {
+		// get the user fcm token based on the vapidKey
 		getToken(messaging, {
 			vapidKey:
 				'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
@@ -80,34 +84,28 @@
 				await updateUserStore(fetchedToken);
 			})
 			.catch((error) => {
-				// edit handler for
+				// edit handler for errors
 				console.log('Error fetching token', error);
 			});
 	}
 
-	function checkPermissions() {
+	async function checkPermissions() {
 		if (window.Notification) {
+			// if permissions have been granted
+			// no need to worry about anything more!
 			if (Notification.permission === 'granted') {
-			} else if (Notification.permission !== 'denied') {
-				Notification.requestPermission((permission) => {
-					if (permission === 'granted') {
-						UserStore.set({
-							name: $UserStore.name,
-							profilePhoto: $UserStore.profilePhoto,
-							uid: $UserStore.uid,
-							notifToken: $UserStore.notifToken,
-							boxes: $UserStore.boxes,
-							notifsPermitted: true
-						});
-					}
-				});
+			}
+			// if permissions have not been granted
+			else {
+				// request for permissions
+				await requestPermission();
 			}
 		}
 	}
 
 	async function subscribeTokenToTopic(token: string, topic: string) {
 		const payload = { registrationToken: token, topic: topic };
-
+		console.log('payload', payload);
 		const response = await fetch('../../api/topics/subscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -129,21 +127,25 @@
 		});
 	}
 
+	// Called whenever the notification toggle is clicked
 	async function handleNotifToggle(value: boolean) {
 		loading = true;
 
 		// if the notifs were permitted,
 		if (value) {
-			// unsubscribe to the topic
 			console.log('unsubscribing', $UserStore.notifToken);
+			// update the user store to set it to false
 			await updateUserStore('');
-			loading = false;
+			// unsubscribe to the topic
 			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			loading = false;
 		}
 		// if the notifs were not permitted
 		else {
 			console.log('subscribing', $UserStore.notifToken);
+			// update the user store to set it to false
 			await getUserToken();
+			// subscribe to the topic
 			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			loading = false;
 		}
@@ -180,7 +182,6 @@
 <section transition:fly={{ x: 3000, y: 0 }} class="h-calc([100%-20px]) max-h-svh">
 	<div class="z-20 grid grid-cols-1 w-full h-svh bg-[#EEF2F5] absolute">
 		<div class="flex flex-col items-center">
-
 			<!-- Header -->
 			<div class="flex items-center justify-between p-4 w-full my-4">
 				<button
@@ -195,7 +196,6 @@
 				<div></div>
 			</div>
 
-
 			<!-- SETTING ITEMS -->
 			<div class="w-[95%]">
 				<!-- User profile -->
@@ -203,7 +203,6 @@
 					<ProfilePhoto></ProfilePhoto>
 					<h4>{$UserStore.name}</h4>
 				</div>
-
 
 				<p class="w-full p-2 my-2">General</p>
 
