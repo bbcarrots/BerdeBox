@@ -1,7 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebaseui/dist/firebaseui.css';
 import { firebaseApp } from './config';
-import { getAuth, getRedirectResult, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { getAuth, getRedirectResult, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { goto } from '$app/navigation';
 
 export const auth = getAuth(firebaseApp);
@@ -16,7 +16,7 @@ provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 auth.languageCode = 'it';
 
 //redirect on auth
-getRedirectResult(auth)
+signInWithPopup(auth, provider)
 	.then((result) => {
 		// This gives you a Google Access Token. You can use it to access Google APIs.
 		let credential = null; // Initialize credential as null
