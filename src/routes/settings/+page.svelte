@@ -92,7 +92,7 @@
 	function checkPermissions() {
 		if (window.Notification) {
 			if (Notification.permission === 'granted') {
-			} else if (Notification.permission !== 'denied') {
+			} else {
 				Notification.requestPermission(async (permission) => {
 					if (permission === 'granted') {
 						UserStore.set({
