@@ -91,10 +91,15 @@
 
 	function checkPermissions() {
 		if (window.Notification) {
-			if (Notification.permission === 'granted') {
-			} else if (Notification.permission !== 'denied') {
+			// If the notification permissions have not been granted, and if no token yet
+			if (Notification.permission !== 'granted' && $UserStore.notifToken !== '') {
+				// Request for permissions
 				Notification.requestPermission(async (permission) => {
+					// If the user agrees
+					console.log('unrequired');
 					if (permission === 'granted') {
+						// get the user token and update it
+						getUserToken();
 						UserStore.set({
 							name: $UserStore.name,
 							profilePhoto: $UserStore.profilePhoto,
@@ -103,6 +108,8 @@
 							boxes: $UserStore.boxes,
 							notifsPermitted: true
 						});
+
+						// update the user's token in firebase
 						await updateUserToken($UserStore.uid, $UserStore.notifToken);
 					}
 				});
