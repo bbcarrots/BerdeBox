@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { initializeFirebaseUI } from '$lib/firebase/auth';
+	// import { initializeFirebaseUI } from '$lib/firebase/auth';
 	import { onMount } from 'svelte';
+	import { login } from '$lib/firebase/auth';
 
 	onMount(() => {
 		//initialize the authentiation
-		initializeFirebaseUI();
+		// initializeFirebaseUI();
+
 	});
 </script>
 
@@ -19,11 +21,11 @@
 				customize to fit your every need.
 			</p>
 		</div>
-		<div id="firebaseui-auth-container">
-			<!-- <button class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center">
+		<!-- <div id="firebaseui-auth-container"> -->
+			<button class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center" on:click={login}>
 				<img class="object-cover w-[20px]" src="/logos/google-logo.svg" alt="google logo"> Continue with Google
-			</button> -->
-		</div>
+			</button>
+		<!-- </div> -->
 	</div>
 	<div class="w-full h-svh">
 		<img class="object-cover w-full h-full" src="/mockups/berdebox.png" alt="hero" />
