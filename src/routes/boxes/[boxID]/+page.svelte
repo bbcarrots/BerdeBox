@@ -163,15 +163,15 @@
 		<div></div>
 	</div>
 	<!-- content -->
-	<div class="grid grid-cols-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]">
+	<div class="grid gap-2 grid-cols-1 grid-rows-8 md:grid-rows-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]">
 		<!-- box preview -->
-		<div transition:scale class="col-span-3 mb-4 md:mr-4">
+		<div transition:scale class="md:col-span-3 row-span-3 md:mr-4">
 			<BoxPreview {src} {datetime} {message} status={'none'}></BoxPreview>
 		</div>
 
 		<div
 			transition:fly={{ x: 0, y: 3000 }}
-			class="grid grid-rows-7 md:col-span-2 md:grid-rows-10 w-full h-full"
+			class="grid row-span-5 grid-rows-7 md:col-span-2 md:grid-rows-10 w-full h-full overflow-hidden"
 		>
 			<!-- tabbar buttons -->
 			<div
