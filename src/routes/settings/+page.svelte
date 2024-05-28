@@ -90,7 +90,7 @@
 			});
 	}
 
-	async function checkPermissions() {
+	async function checkPermissions(request: boolean = false) {
 		if (window.Notification) {
 			// if permissions have been granted
 			// no need to worry about anything more!
@@ -99,7 +99,11 @@
 			// if permissions have not been granted
 			else {
 				// request for permissions
-				await requestPermission();
+				if (request) {
+					requestPermission();
+				} else {
+					alert('Please enable notifications to receive alerts');
+				}
 			}
 		}
 	}
@@ -146,7 +150,7 @@
 			console.log('subscribing', $UserStore.notifToken);
 			// check if permissions have been granted
 			// check permissions already checks if the permissions have been granted
-			checkPermissions();
+			checkPermissions(true);
 			loading = false;
 		}
 	}
