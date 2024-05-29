@@ -108,7 +108,7 @@
 					class="grid w-full md:max-w-[600px] h-[calc(100%-60px)] m-0 md:absolute md:h-[90%] md:content-center"
 				>
 					<form class="flex flex-col md:justify-normal gap-8 h-full p-8">
-						<div class="grid gap-4">
+						<div class="grid gap-4 text-bb-black">
 							<label for="boxID">
 								<h4>Box Code</h4>
 							</label>
@@ -127,7 +127,7 @@
 							}}
 							type="submit"
 							value="Add Box"
-							class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
+							class="flex gap-4 bg-bb-green-2 text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
 						/>
 					</form>
 				</div>
