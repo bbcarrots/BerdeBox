@@ -18,14 +18,13 @@
 		cb3: false
 	};
 
-
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
 	let src: string;
 	let datetime: Date;
 	let message: string;
 	let status: string;
-	let takePhoto:boolean = false;
+	let takePhoto: boolean = false;
 
 	function handleLogClick(index: number) {
 		selectedLogIndex = index;
@@ -42,20 +41,20 @@
 	onValue(ref($firebaseDBFront, 'berdebox1/output/'), async (snapshot: any) => {
 		const output = snapshot.val();
 
-		console.log(output)
+		console.log(output);
 
 		takePhoto = output.take_photo;
 
-		if (output.main_lock_is_open == false && output.take_photo == false){
+		if (output.main_lock_is_open == false && output.take_photo == false) {
 			mainLockIsOpen = false;
 		}
-		if (output.modules.cb1_is_open == false && output.take_photo == false){
+		if (output.modules.cb1_is_open == false && output.take_photo == false) {
 			cashBoxes.cb1 = false;
 		}
-		if (output.modules.cb2_is_open == false && output.take_photo == false){
+		if (output.modules.cb2_is_open == false && output.take_photo == false) {
 			cashBoxes.cb2 = false;
 		}
-		if (output.modules.cb2_is_open == false && output.take_photo == false){
+		if (output.modules.cb2_is_open == false && output.take_photo == false) {
 			cashBoxes.cb3 = false;
 		}
 	});
@@ -164,7 +163,9 @@
 		<div></div>
 	</div>
 	<!-- content -->
-	<div class="grid gap-2 grid-cols-1 grid-rows-8 md:grid-rows-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]">
+	<div
+		class="grid gap-2 grid-cols-1 grid-rows-8 md:grid-rows-1 md:grid-cols-5 h-[90%] m-0 md:m-4 md:h-[85%]"
+	>
 		<!-- box preview -->
 		<div transition:scale class="md:col-span-3 row-span-3 md:mr-4">
 			<BoxPreview {src} {datetime} {message} status={'none'}></BoxPreview>
