@@ -161,7 +161,7 @@
 				name: $UserStore.name,
 				profilePhoto: $UserStore.profilePhoto,
 				uid: $UserStore.uid,
-				notifToken: fetchedToken,
+				notifToken: $UserStore.notifToken,
 				boxes: $UserStore.boxes,
 				notifsPermitted: true
 			});

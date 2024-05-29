@@ -23,7 +23,7 @@
 	onMount(() => {
 		//register the service worker before everything else
 		if (navigator.serviceWorker) {
-			// Register the SW
+		// Register the SW
 			navigator.serviceWorker
 				.register('firebase-messaging-sw.js')
 				.then(function (registration) {

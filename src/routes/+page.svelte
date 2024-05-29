@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initializeFirebaseUI } from '$lib/firebase/auth';
+	// import { initializeFirebaseUI } from '$lib/firebase/auth';
 	import { onMount } from 'svelte';
 	import { login } from '$lib/firebase/auth';
 
