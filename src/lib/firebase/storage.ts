@@ -47,8 +47,9 @@ export async function getImages(mailbox_num: number) {
 			};
 		});
 
+		const sortedLogs = logs.sort((a, b) => a.id - b.id);
 		// Update the Logs store with the new log entries
-		return logs;
+		return sortedLogs;
 	} catch (error) {
 		console.error('Error retrieving photos or metadata:', error);
 		return [];
