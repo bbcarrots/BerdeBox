@@ -24,8 +24,11 @@
 
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
+
 			// If authentication succeeds
 			if (user) {
+				loginLoading.set(true);
+
 				onValue(ref($firebaseDBFront, 'berdebox1/output/take_photo'), async (snapshot: any) => {
 					const take_photo = snapshot.val();
 
@@ -42,6 +45,7 @@
 				// then update the boxes store based on user inforation
 				// then redirect to /boxes
 				if (validUser !== null && user !== null) {
+					
 					UserStore.set({
 						name: user.displayName,
 						profilePhoto: user.photoURL,

@@ -11,6 +11,13 @@
 
 	// --------------------------------------
 	const boxID = Number($page.params.boxID) - 1;
+	let mainLockIsOpen: boolean = false;
+	let cashBoxes: { [key: string]: boolean } = {
+		cb1: false,
+		cb2: false,
+		cb3: false
+	};
+
 
 	let isControl: boolean = true;
 	let selectedLogIndex: Number = 0;
@@ -89,12 +96,6 @@
 	const tabbarInactiveClasses = 'hit-area p-3 m-2';
 
 	// -------------------------------------------------------- FIREBASE CODE
-	let mainLockIsOpen: boolean = false;
-	let cashBoxes: { [key: string]: boolean } = {
-		cb1: false,
-		cb2: false,
-		cb3: false
-	};
 
 	async function handleMainLockOpen() {
 		/* Handles Open Main Lock event from Main Lock button by sending a PATCH request
