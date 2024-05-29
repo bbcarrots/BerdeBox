@@ -15,8 +15,10 @@ if (!admin.apps.length) {
 
 export async function PATCH({ request }) {
     // Assume you have the registration token available
+    console.log("request to unsubscribe", request)
     const { registrationToken, topic } = await request.json();
 
+    console.log("gonna unsubscribe")
     // Subscribe the device to a topic
     let response = await admin.messaging().unsubscribeFromTopic(registrationToken, topic);
     console.log('Successfully unsubscribed from topic');

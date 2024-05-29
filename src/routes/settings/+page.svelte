@@ -30,10 +30,27 @@
 	}
 
 	onMount(() => {
+		//register the service worker before everything else
+		if (navigator.serviceWorker) {
+		// Register the SW
+			navigator.serviceWorker
+				.register('firebase-messaging-sw.js')
+				.then(function (registration) {
+					console.log('Service Worker registered with scope:', registration.scope);
+				})
+				.catch(function (error) {
+					console.error('Service Worker registration failed:', error);
+				});
+		}
+
+		// get the messaaging
 		messaging = getMessaging(firebaseApp);
 
+		// detect messages when the browser is open
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
+
+			// when the message is received show the notification
 			console.log(payload.notification?.title);
 			const notificationOptions = {
 				body: payload.notification?.body
@@ -45,19 +62,25 @@
 		});
 
 		// check the user's permissions
+		// note that this does not request for the permissions
 		checkPermissions();
 	});
 
 	function requestPermission() {
 		// Request for notification permissions from the user
+		loading = true;
 
 		Notification.requestPermission().then(async (permission) => {
 			// if the permission has been granted, get the token
-			console.log('requested permission');
+			console.log('requested permission', permission);
 			if (permission === 'granted') {
+				console.log(loading)
 				// get the user token, then subscribe to the alerts
+				console.log("permission has been granted, gonna get user token")
 				getUserToken();
 				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			} else {
+				alert('Please enable notifications to receive alerts');
 			}
 		});
 	}
@@ -70,6 +93,7 @@
 		})
 			.then(async (fetchedToken) => {
 				//update firestore user information with token
+				console.log("got usertoken")
 				await updateUserStore(fetchedToken);
 			})
 			.catch((error) => {
@@ -80,14 +104,21 @@
 
 	async function checkPermissions(request: boolean = false) {
 		if (window.Notification) {
+			console.log("checking permissions in window notif")
+
 			// if permissions have been granted
 			// no need to worry about anything more!
 			if (Notification.permission === 'granted') {
+				console.log("notifs already granted")
+				getUserToken();
+				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			}
 			// if permissions have not been granted
 			else {
-				// request for permissions
+				// if the user requested to request permissions, then request permissions
+				// otherwise, give an alert.
 				if (request) {
+					console.log("notifs setting to granted, will request permission")
 					requestPermission();
 				} else {
 					alert('Please enable notifications to receive alerts');
@@ -96,9 +127,10 @@
 		}
 	}
 
+	// function to subscribe to the topic
 	async function subscribeTokenToTopic(token: string, topic: string) {
 		const payload = { registrationToken: token, topic: topic };
-		console.log('payload', payload);
+		console.log('sub payload', payload);
 		const response = await fetch('../../api/topics/subscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -108,8 +140,10 @@
 		});
 	}
 
+	// function to unsubscribe to the topic
 	async function unsubscribeTokenToTopic(token: string, topic: string) {
 		const payload = { registrationToken: token, topic: topic };
+		console.log('unsub payload', payload);
 
 		const response = await fetch('../../api/topics/unsubscribe', {
 			method: 'PATCH',
@@ -135,10 +169,10 @@
 		}
 		// if the notifs were not permitted
 		else {
-			console.log('subscribing', $UserStore.notifToken);
+			console.log('subscribing', $UserStore.notifToken, loading);
 			// check if permissions have been granted
 			// check permissions already checks if the permissions have been granted
-			checkPermissions(true);
+			await checkPermissions(true);
 			loading = false;
 		}
 	}
