@@ -3,6 +3,15 @@
 	import { Icon, ExclamationCircle, CheckCircle, XCircle } from 'svelte-hero-icons';
 	export let log: log;
 	export let selected;
+
+	const options = {
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true
+	};
 </script>
 
 <button on:click>
@@ -13,7 +22,7 @@
 	>
 		<img class="aspect-video object-cover rounded-[10px] col-span-1" src={log.imageURL} alt="log" />
 		<div class="grid col-span-2 items-center my-2">
-			<h6 class="text-left">{log.datetime.toLocaleString()}</h6>
+			<h6 class="text-left">{log.datetime.toLocaleString('en-US', options)}</h6>
 			<span class="flex items-center gap-1">
 				{#if log.status == 'success'}
 					<span class="text-green-500">

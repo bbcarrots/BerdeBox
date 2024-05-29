@@ -9,12 +9,18 @@ export function getMessage(status: string, action: string) {
 		}
 	} else if (action.includes('doorbell')) {
 		return 'Mailbox doorbell was rang!';
-	} else if (action.includes('cbopen')) {
-		let cashboxNum = action.slice(-5).slice(0, -4);
-		if (status == 'success') {
-			return `Cashbox ${cashboxNum} successfully opened.`;
+	} else {
+		let match = action.match(/cb(\d+)open/);
+		let cashboxNum = match ? match[1] : null;
+
+		if (cashboxNum) {
+			if (status == 'success') {
+				return `Cashbox ${cashboxNum} successfully opened.`;
+			} else {
+				return `Cashbox ${cashboxNum} not opened successfully.`;
+			}
 		} else {
-			return `Cashbox ${cashboxNum} not opened successfully.`;
+			return `Invalid action format: ${action}`;
 		}
 	}
 	return '';

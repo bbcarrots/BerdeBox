@@ -37,7 +37,7 @@ export async function getImages(mailbox_num: number) {
 			// information[2] == action
 
 			const information = metadata.name.split('-');
-
+			console.log(metadata.name, information);
 			return {
 				id: Number(information[0]),
 				imageURL: urls[index],
@@ -47,8 +47,9 @@ export async function getImages(mailbox_num: number) {
 			};
 		});
 
+		const sortedLogs = logs.sort((a, b) => a.id - b.id);
 		// Update the Logs store with the new log entries
-		return logs;
+		return sortedLogs;
 	} catch (error) {
 		console.error('Error retrieving photos or metadata:', error);
 		return [];

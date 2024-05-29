@@ -108,7 +108,7 @@
 					class="grid w-full md:max-w-[600px] h-[calc(100%-60px)] m-0 md:absolute md:h-[90%] md:content-center"
 				>
 					<form class="flex flex-col md:justify-normal gap-8 h-full p-8">
-						<div class="grid gap-4">
+						<div class="grid gap-4 text-bb-black">
 							<label for="boxID">
 								<h4>Box Code</h4>
 							</label>
@@ -127,7 +127,7 @@
 							}}
 							type="submit"
 							value="Add Box"
-							class="flex gap-4 bg-bb-black text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
+							class="flex gap-4 bg-bb-green-2 text-white p-4 rounded-[15px] items-center justify-center hover:cursor-pointer"
 						/>
 					</form>
 				</div>
@@ -145,7 +145,7 @@
 			{#key $Boxes}
 				{#if isRetrievingBoxes}
 					<div
-						class="flex flex-row items-center justify-center w-full h-full bg-white rounded-[15px] min-h-[250px] md:min-h-[400px]"
+						class="flex flex-row items-center justify-center w-full h-full bg-[#FBFBFB] rounded-[15px] min-h-[250px] md:min-h-[400px]"
 					>
 						<span class="grid gap-0 justify-items-center items-center text-center">
 							<img class="w-[100px]" src="icons/loadingBoxes.gif" alt="loading box animation" />

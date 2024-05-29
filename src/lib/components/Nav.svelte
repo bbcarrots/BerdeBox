@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { Icon, Cog8Tooth } from 'svelte-hero-icons';
+	import { Icon, Cog8Tooth, ChevronRight } from 'svelte-hero-icons';
 	import { page } from '$app/stores';
+	import ProfilePhoto from './ProfilePhoto.svelte';
 
 	$: activeUrl = $page.url.pathname;
 
 	const activeClasses =
-		'bg-[#578751] text-white font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2';
+		'bg-bb-green-2 text-white font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2';
 	const inactiveClasses =
-		'bg-white text-bb-dark-green font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2';
+		'bg-white text-bb-black font-medium rounded-[15px] text-sm px-8 py-3 text-center me-2 mb-2';
 </script>
 
 <div class="flex items-center justify-between">
@@ -24,9 +25,11 @@
 		</a>
 	</div>
 
-	<a href="/settings">
-		<button class="text-[#24581E]">
-			<Icon src={Cog8Tooth} solid size="32" />
-		</button>
-	</a>
+	<div class="flex items-center gap-2">
+		<a href="/settings">
+			<div class="w-[55px]">
+				<ProfilePhoto></ProfilePhoto>
+			</div>
+		</a>
+	</div>
 </div>

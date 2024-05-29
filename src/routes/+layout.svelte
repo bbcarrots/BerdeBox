@@ -21,10 +21,11 @@
 	loading.set(true);
 
 	onMount(() => {
-
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
 			// If authentication succeeds
+			loginLoading.set(true);
+
 			if (user) {
 				onValue(ref($firebaseDBFront, 'berdebox1/output/take_photo'), async (snapshot: any) => {
 					const take_photo = snapshot.val();
@@ -55,6 +56,8 @@
 					loading.set(false);
 
 					retrievingBoxes.set(false);
+					loginLoading.set(false);
+
 					if ($page.url.pathname == '/') {
 						goto('/boxes');
 					}
@@ -106,8 +109,20 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap');
-
+	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap');
+	@font-face {
+		font-family: 'ProximaNova-Light';
+		src: url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.eot');
+		src:
+			url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.eot?#iefix')
+				format('embedded-opentype'),
+			url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.woff2') format('woff2'),
+			url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.woff') format('woff'),
+			url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.ttf') format('truetype'),
+			url('https://db.onlinewebfonts.com/t/90b3680786db32f9b5c112d1537677db.svg#ProximaNova-Light')
+				format('svg');
+	}
 	:global(body) {
-		font-family: 'Familjen Grotesk', sans-serif;
+		font-family: 'ProximaNova-Light';
 	}
 </style>

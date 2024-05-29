@@ -4,8 +4,11 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'bb-black': '#1D1D1D',
-				'bb-dark-green': '#243531'
+				'bb-black': '#303030',
+				'bb-green-1': '#d4edd1',
+				'bb-green-2': '#304336',
+				'bb-green-3': '#1b3022',
+				'bb-green-4': '#95ba90'
 			}
 		}
 	},

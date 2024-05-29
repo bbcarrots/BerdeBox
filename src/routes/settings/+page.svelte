@@ -32,7 +32,7 @@
 	onMount(() => {
 		//register the service worker before everything else
 		if (navigator.serviceWorker) {
-		// Register the SW
+			// Register the SW
 			navigator.serviceWorker
 				.register('firebase-messaging-sw.js')
 				.then(function (registration) {
@@ -74,9 +74,9 @@
 			// if the permission has been granted, get the token
 			console.log('requested permission', permission);
 			if (permission === 'granted') {
-				console.log(loading)
+				console.log(loading);
 				// get the user token, then subscribe to the alerts
-				console.log("permission has been granted, gonna get user token")
+				console.log('permission has been granted, gonna get user token');
 				getUserToken();
 				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			} else {
@@ -93,7 +93,7 @@
 		})
 			.then(async (fetchedToken) => {
 				//update firestore user information with token
-				console.log("got usertoken")
+				console.log('got usertoken');
 				await updateUserStore(fetchedToken);
 			})
 			.catch((error) => {
@@ -104,12 +104,12 @@
 
 	async function checkPermissions(request: boolean = false) {
 		if (window.Notification) {
-			console.log("checking permissions in window notif")
+			console.log('checking permissions in window notif');
 
 			// if permissions have been granted
 			// no need to worry about anything more!
 			if (Notification.permission === 'granted') {
-				console.log("notifs already granted")
+				console.log('notifs already granted');
 				getUserToken();
 				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			}
@@ -118,7 +118,7 @@
 				// if the user requested to request permissions, then request permissions
 				// otherwise, give an alert.
 				if (request) {
-					console.log("notifs setting to granted, will request permission")
+					console.log('notifs setting to granted, will request permission');
 					requestPermission();
 				} else {
 					alert('Please enable notifications to receive alerts');
@@ -218,7 +218,7 @@
 				>
 					<Icon src={ChevronLeft} solid size="20" />
 				</button>
-				<h4>Settings</h4>
+				<h4 class="-ml-4">Profile</h4>
 				<div></div>
 			</div>
 
@@ -281,7 +281,10 @@
 					</button>
 				</div>
 
-				<button class="flex flex-row justify-between items-center p-5" on:click={handleSignOut}>
+				<button
+					class="flex flex-row justify-between items-center p-5 w-full"
+					on:click={handleSignOut}
+				>
 					<div class="flex flex-row itens-center gap-3">
 						<span class="text-bb-black/[0.8]">
 							<Icon src={ArrowLeftStartOnRectangle} outline size="25" />
