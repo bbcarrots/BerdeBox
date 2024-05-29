@@ -145,7 +145,7 @@
 			{#key $Boxes}
 				{#if isRetrievingBoxes}
 					<div
-						class="flex flex-row items-center justify-center w-full h-full bg-white rounded-[15px] min-h-[250px] md:min-h-[400px]"
+						class="flex flex-row items-center justify-center w-full h-full bg-[#FBFBFB] rounded-[15px] min-h-[250px] md:min-h-[400px]"
 					>
 						<span class="grid gap-0 justify-items-center items-center text-center">
 							<img class="w-[100px]" src="icons/loadingBoxes.gif" alt="loading box animation" />
