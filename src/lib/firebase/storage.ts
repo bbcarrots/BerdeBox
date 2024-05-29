@@ -37,7 +37,7 @@ export async function getImages(mailbox_num: number) {
 			// information[2] == action
 
 			const information = metadata.name.split('-');
-
+			console.log(metadata.name, information);
 			return {
 				id: Number(information[0]),
 				imageURL: urls[index],
