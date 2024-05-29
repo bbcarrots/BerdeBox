@@ -1,13 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebaseui/dist/firebaseui.css';
 import { firebaseApp } from './config';
-import {
-	getAuth,
-	getRedirectResult,
-	GoogleAuthProvider,
-	signInWithPopup,
-	signOut
-} from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { goto } from '$app/navigation';
 
 export const auth = getAuth(firebaseApp);
@@ -15,40 +9,36 @@ export const auth = getAuth(firebaseApp);
 // instance of the google auth provider
 const provider = new GoogleAuthProvider();
 
-// update language code on Auth instance to localize provider's OAuth flow
-auth.languageCode = 'it';
+//redirect on auth
+export const login = () => {
+	signInWithPopup(auth, provider)
+		.then((result) => {
+			// This gives you a Google Access Token. You can use it to access Google APIs.
+			let credential = null; // Initialize credential as null
 
-// //redirect on auth
-// export const login = () => {
+			if (result) {
+				credential = GoogleAuthProvider.credentialFromResult(result);
+				const user = result.user;
+				console.log(user);
+			}
+			const token = credential?.accessToken;
 
-// 	signInWithPopup(auth, provider)
-// 	.then((result) => {
-// 		// This gives you a Google Access Token. You can use it to access Google APIs.
-// 		let credential = null; // Initialize credential as null
-
-// 		if (result) {
-// 			credential = GoogleAuthProvider.credentialFromResult(result);
-// 			const user = result.user;
-// 			console.log(user);
-// 		}
-// 		const token = credential?.accessToken;
-
-// 		// The signed-in user info.
-// 		const user = result?.user;
-// 		// IdP data available using getAdditionalUserInfo(result)
-// 		// ...
-// 	})
-// 	.catch((error) => {
-// 		// Handle Errors here.
-// 		const errorCode = error.code;
-// 		const errorMessage = error.message;
-// 		// The email of the user's account used.
-// 		const email = error.customData.email;
-// 		// The AuthCredential type that was used.
-// 		const credential = GoogleAuthProvider.credentialFromError(error);
-// 		// ...
-// 	});
-// }
+			// The signed-in user info.
+			const user = result?.user;
+			// IdP data available using getAdditionalUserInfo(result)
+			// ...
+		})
+		.catch((error) => {
+			// Handle Errors here.
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// The email of the user's account used.
+			const email = error.customData.email;
+			// The AuthCredential type that was used.
+			const credential = GoogleAuthProvider.credentialFromError(error);
+			// ...
+		});
+};
 
 //needs to be in a function since firebaseui needs to be dynamically imported
 export async function getUIConfig() {
@@ -58,8 +48,7 @@ export async function getUIConfig() {
 		tosUrl: '/',
 		privacyPolicyUrl: function () {
 			window.location.assign('/');
-		},
-		signInFlow: 'popup'
+		}
 	};
 }
 

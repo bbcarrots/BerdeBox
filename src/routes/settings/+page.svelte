@@ -30,11 +30,8 @@
 	}
 
 	onMount(() => {
-
-		checkPermissions();
-
 		messaging = getMessaging(firebaseApp);
-		// requestPermission();
+
 		onMessage(messaging, (payload) => {
 			messages.push(payload);
 			console.log(payload.notification?.title);
@@ -46,19 +43,27 @@
 				new Notification(payload.notification?.title, notificationOptions);
 			}
 		});
+
+		// check the user's permissions
+		checkPermissions();
 	});
 
-	// funciton to request permission for notifications
 	function requestPermission() {
-		Notification.requestPermission().then((permission) => {
+		// Request for notification permissions from the user
+
+		Notification.requestPermission().then(async (permission) => {
 			// if the permission has been granted, get the token
+			console.log('requested permission');
 			if (permission === 'granted') {
+				// get the user token, then subscribe to the alerts
 				getUserToken();
+				await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
 			}
 		});
 	}
 
 	function getUserToken() {
+		// get the user fcm token based on the vapidKey
 		getToken(messaging, {
 			vapidKey:
 				'BAgbjDYolVbTrQZZ5y6zyf1Fmt2DnvVeK5fd2_34XM88gKL9W52RS2YwCRSvK3cW1BTnXG1SgTaGHUpJpRkhqdc'
@@ -68,34 +73,32 @@
 				await updateUserStore(fetchedToken);
 			})
 			.catch((error) => {
-				// edit handler for
+				// edit handler for errors
 				console.log('Error fetching token', error);
 			});
 	}
 
-	function checkPermissions() {
+	async function checkPermissions(request: boolean = false) {
 		if (window.Notification) {
+			// if permissions have been granted
+			// no need to worry about anything more!
 			if (Notification.permission === 'granted') {
-			} else if (Notification.permission !== 'denied') {
-				Notification.requestPermission((permission) => {
-					if (permission === 'granted') {
-						UserStore.set({
-							name: $UserStore.name,
-							profilePhoto: $UserStore.profilePhoto,
-							uid: $UserStore.uid,
-							notifToken: $UserStore.notifToken,
-							boxes: $UserStore.boxes,
-							notifsPermitted: true
-						});
-					}
-				});
+			}
+			// if permissions have not been granted
+			else {
+				// request for permissions
+				if (request) {
+					requestPermission();
+				} else {
+					alert('Please enable notifications to receive alerts');
+				}
 			}
 		}
 	}
 
 	async function subscribeTokenToTopic(token: string, topic: string) {
 		const payload = { registrationToken: token, topic: topic };
-
+		console.log('payload', payload);
 		const response = await fetch('../../api/topics/subscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -117,22 +120,25 @@
 		});
 	}
 
+	// Called whenever the notification toggle is clicked
 	async function handleNotifToggle(value: boolean) {
 		loading = true;
 
 		// if the notifs were permitted,
 		if (value) {
-			// unsubscribe to the topic
 			console.log('unsubscribing', $UserStore.notifToken);
+			// update the user store to set it to false
 			await updateUserStore('');
-			loading = false;
+			// unsubscribe to the topic
 			await unsubscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			loading = false;
 		}
 		// if the notifs were not permitted
 		else {
 			console.log('subscribing', $UserStore.notifToken);
-			await getUserToken();
-			await subscribeTokenToTopic($UserStore.notifToken, 'doorbell-alerts');
+			// check if permissions have been granted
+			// check permissions already checks if the permissions have been granted
+			checkPermissions(true);
 			loading = false;
 		}
 	}

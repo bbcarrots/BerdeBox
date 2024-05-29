@@ -33,7 +33,6 @@
 					console.error('Service Worker registration failed:', error);
 				});
 		}
-
 		// HANDLES AUTHENTICATION
 		onAuthStateChanged(auth, async (user) => {
 			// If authentication succeeds
