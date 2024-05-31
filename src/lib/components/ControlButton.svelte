@@ -52,13 +52,13 @@
 	on:touchstart={handleTouchStart}
 	on:touchend={handleTouchEnd}
 	class={isDisabled
-		? 'pointer-events-none rounded-[15px] bg-bb-green-1 unselectable'
+		? 'pointer-events-none select-none rounded-[15px] bg-bb-green-1 unselectable'
 		: holding
 			? holdingClass
-			: 'rounded-[15px] bg-bb-green-1 text-bb-black'}
+			: 'rounded-[15px] bg-bb-green-1 text-bb-black select-none'}
 	disabled={open}
 >
-	<div class="grid items-center justify-center p-4 pointer-events-none">
+	<div class="grid items-center justify-center p-4 pointer-events-none select-none">
 		{#if !open}
 			<div class="flex gap-2 flex-col items-center justify-center">
 				<!-- Header -->
@@ -110,13 +110,13 @@
 				>
 					{#if isDisabled}
 						<p>Locked</p>
-						<h6 class="mt-2">Wait for photo</h6>
+						<h6 class="mt-2 prevent-select">Wait for photo</h6>
 					{:else}
 						<p>Locked</p>
 						{#if !holding}
-							<h6 class="mt-2">Hold to open</h6>
+							<h6 class="mt-2 prevent-select">Hold to open</h6>
 						{:else}
-							<h6 class="mt-2">Opening</h6>
+							<h6 class="mt-2 prevent-select">Opening</h6>
 						{/if}
 					{/if}
 				</div>
@@ -150,8 +150,8 @@
 
 				<!-- Locked Text -->
 				<div class="flex flex-col -gap-1 text-bb-dark-green">
-					<p>Unlocked</p>
-					<h6 class="mt-2 text-bb-dark-green">Wait to lock</h6>
+					<p class="prevent-select">Unlocked</p>
+					<h6 class="mt-2 text-bb-dark-green prevent-select">Wait to lock</h6>
 				</div>
 			</div>
 		{/if}
@@ -159,6 +159,12 @@
 </button>
 
 <style>
+	.prevent-select {
+		-webkit-user-select: none; /* Safari */
+		-ms-user-select: none; /* IE 10 and IE 11 */
+		user-select: none; /* Standard syntax */
+	}
+
 	.unselectable {
 		-moz-user-select: -moz-none;
 		-khtml-user-select: none;
