@@ -5,10 +5,7 @@ const firebase = getDatabase(firebaseApp);
 
 export function updateMainLockOpen(boxCode: string) {
 	/* Updates the values of `main_lock_is_open`, `lock_buzzer_is_on`, `lock_led_is_on`, and `take_photo`. */
-	const updateValue = {
-		main_lock_is_open: true,
-		take_photo: true
-	};
+	const updateValue: { [key: string]: boolean } = { main_lock_is_open: true };
 
 	return update(ref(firebase, boxCode + '/output'), updateValue);
 }
@@ -21,9 +18,12 @@ export function updateCashLockOpen(boxCode: string, cashBoxCode: string) {
 	return update(ref(firebase, boxCode + '/output/modules'), updateValue);
 }
 
-export function updateTakePhoto(boxCode: string) {
+export function updateTakePhoto(boxCode: string, command: number) {
 	/* Updates the value of `cb<#>_is_open` depending on the cashBoxID */
-	const updateValue: { [key: string]: boolean } = { take_photo: true };
+	const updateValue: { [key: string]: boolean | number } = {
+		take_photo: true,
+        take_command_photo: command
+	};
 
 	return update(ref(firebase, boxCode + '/output'), updateValue);
 }
