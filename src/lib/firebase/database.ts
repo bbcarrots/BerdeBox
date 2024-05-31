@@ -22,7 +22,7 @@ export function updateTakePhoto(boxCode: string, command: number) {
 	/* Updates the value of `cb<#>_is_open` depending on the cashBoxID */
 	const updateValue: { [key: string]: boolean | number } = {
 		take_photo: true,
-        take_command_photo: command
+        take_photo_command: command
 	};
 
 	return update(ref(firebase, boxCode + '/output'), updateValue);
