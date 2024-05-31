@@ -14,7 +14,7 @@ export async function PATCH({ request }) {
 			return { success: false, error: error };
 		});
 
-    response = await updateTakePhoto(boxCode)
+    response = await updateTakePhoto(boxCode, 3)
 		.then(() => {
 			return { success: true, error: null };
 		})
