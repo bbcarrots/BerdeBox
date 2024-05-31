@@ -84,6 +84,8 @@
 											on:click={() => {
 												return false;
 											}}
+											muted 
+											playsinline
 											class=" w-[60%] ml-[20%] aspect-square -rotate-45"
 										>
 											<source src="/icons/lock.mp4" type="video/mp4" />
