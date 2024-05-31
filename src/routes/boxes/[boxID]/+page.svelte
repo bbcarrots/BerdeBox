@@ -141,7 +141,7 @@
 	}
 </script>
 
-<section class="h-svh relative">
+<section class="h-svh relative prevent-select">
 	<!-- header -->
 	<div class="sticky top-0 z-10 bg-[#F0F5F4] flex items-center justify-between px-4 py-6">
 		<a href="/boxes" class="left-2">
@@ -252,3 +252,11 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	.prevent-select {
+		-webkit-user-select: none; /* Safari */
+		-ms-user-select: none; /* IE 10 and IE 11 */
+		user-select: none; /* Standard syntax */
+	}
+</style>
