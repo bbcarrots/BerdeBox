@@ -68,7 +68,7 @@ export function handleSignOut() {
 		.then(() => {
 			console.log('Sign out successful');
 			// Sign-out successful.
-			goto('/');
+			goto('/app');
 		})
 		.catch((error) => {
 			console.log('Sign out error', error);

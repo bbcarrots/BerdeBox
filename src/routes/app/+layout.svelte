@@ -1,6 +1,6 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import '../app.css';
+	import '../../app.css';
 	import { auth } from '$lib/firebase/auth';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { UserStore } from '$lib/stores/User';
@@ -15,7 +15,7 @@
 	import { ref } from 'firebase/database';
 	import { loginLoading } from '$lib/stores/Page';
 
-	if ($page.url.pathname == '/') {
+	if ($page.url.pathname == '/app') {
 		loginLoading.set(true);
 	}
 	loading.set(true);
@@ -58,8 +58,8 @@
 					retrievingBoxes.set(false);
 					loginLoading.set(false);
 
-					if ($page.url.pathname == '/') {
-						goto('/boxes');
+					if ($page.url.pathname == '/app') {
+						goto('/app/boxes');
 					}
 				}
 
@@ -81,8 +81,8 @@
 						boxes: validUser?.berdeboxes,
 						notifsPermitted: validUser?.notifsPermitted
 					});
-					if ($page.url.pathname == '/') {
-						goto('/boxes');
+					if ($page.url.pathname == '/app') {
+						goto('/app/boxes');
 					}
 				}
 			}
@@ -125,8 +125,4 @@
 	:global(body) {
 		font-family: 'ProximaNova-Light';
 	}
-</style> -->
-
-<body class="h-svh bg-[#F0F5F4]">
-	<slot />
-</body>
+</style>

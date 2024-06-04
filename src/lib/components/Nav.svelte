@@ -13,20 +13,20 @@
 
 <div class="flex items-center justify-between">
 	<div>
-		<a href="/boxes">
-			<button type="button" class={activeUrl === '/boxes' ? activeClasses : inactiveClasses}>
+		<a href="/app/boxes">
+			<button type="button" class={activeUrl === '/app/boxes' ? activeClasses : inactiveClasses}>
 				<p>Boxes</p>
 			</button>
 		</a>
-		<a href="/modules">
-			<button type="button" class={activeUrl === '/modules' ? activeClasses : inactiveClasses}>
+		<a href="/app/modules">
+			<button type="button" class={activeUrl === '/app/modules' ? activeClasses : inactiveClasses}>
 				<p>Modules</p>
 			</button>
 		</a>
 	</div>
 
 	<div class="flex items-center gap-2">
-		<a href="/settings">
+		<a href="/app/settings">
 			<div class="w-[55px]">
 				<ProfilePhoto></ProfilePhoto>
 			</div>
