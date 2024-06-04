@@ -9,27 +9,31 @@
 	let isEnd: boolean;
 	let scrollY: number;
 
-	const framesIntro = 60;
-	const framesModules = 25;
+	const framesIntro = 30;
+	const framesModules = 12;
 
 	// Animation
 	// -----------------------------------------------------------------
-	let intro = Array.from({ length: framesIntro }, (_, i) => i).map((i) => {	
+	let intro = Array.from({ length: framesIntro }, (_, i) => i).map((i) => {
+		i = i * 2 + 1;
 		const paddedIndex = i.toString().padStart(4, '0');
 		return `/landing/intro/${paddedIndex}.png`;
 	});
 
 	let cashbox = Array.from({ length: framesModules }, (_, i) => i).map((i) => {
+		i = i * 2 + 1;
 		const paddedIndex = i.toString().padStart(4, '0');
 		return `/landing/modules/cashbox/${paddedIndex}.png`;
 	});
 
 	let uvlight = Array.from({ length: framesModules }, (_, i) => i).map((i) => {
+		i = i * 2 + 1;
 		const paddedIndex = i.toString().padStart(4, '0');
 		return `/landing/modules/uvbox/${paddedIndex}.png`;
 	});
 
 	let solarPanel = Array.from({ length: framesModules }, (_, i) => i).map((i) => {
+		i = i * 2 + 1;
 		const paddedIndex = i.toString().padStart(4, '0');
 		return `/landing/modules/solar-panel/${paddedIndex}.png`;
 	});
