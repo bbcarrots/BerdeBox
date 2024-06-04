@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1 {
+	font-size: 96px;
+	font-weight: 700;
+	line-height: 120px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+h2 {
+	font-size: 78px;
+	font-weight: 700;
+	line-height: 90px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+h3 {
+	font-size: 64px;
+	font-weight: 600;
+	line-height: 78px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+h4 {
+	font-size: 48px;
+	font-weight: 500;
+	line-height: 140%;
+}
+
+h5 {
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 155%;
+}
+
+p {
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 140%;
+}
+
+h6 {
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 11.4px;
+}
