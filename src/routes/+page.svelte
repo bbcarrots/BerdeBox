@@ -142,17 +142,17 @@
 					<FeatureCard
 						src={'/landing/camera-stills/Button.png'}
 						title={'Doorbell'}
-						subtitle={'Get real-time notifications when the doorbell is pressed.'}
+						subtitle={'Get real-time notifications on the mobile app when the doorbell is pressed'}
 					/>
 					<FeatureCard
 						src={'/landing/camera-stills/Camera.png'}
 						title={'Camera'}
-						subtitle={'Keep an eye on your mail 24/7.'}
+						subtitle={'Keep an eye on your mail 24/7 with a 2 megapixel OV2640 camera'}
 					/>
 					<FeatureCard
 						src={'/landing/camera-stills/Speaker.png'}
 						title={'Buzzer'}
-						subtitle={'So deliverymen can easily locate your mailbox.'}
+						subtitle={'Designed so deliverymen can easily locate your BerdeBox'}
 					/>
 				</div>
 
@@ -175,7 +175,7 @@
 		<div id="modules" class="flex flex-row m-40 bg-white items-center justify-center text-bb-black">
 			<div class="flex flex-col items-center gap-2">
 				<h5>Modules</h5>
-				<h3 class="w-[60%] whitespace-normal text-center">Add-as-you-need modules</h3>
+				<h3 class="w-[60%] whitespace-normal text-center">Plug-and-play modules</h3>
 			</div>
 		</div>
 
@@ -188,7 +188,7 @@
 				<div />
 				<div class="flex flex-col gap-4 relative p-[20%]">
 					<h3>Cashbox</h3>
-					<p>Release money remotely with full control. Attach multiple cashboxes to transact with multiple deliverymen.</p>
+					<p>Release money remotely with full control - attach multiple cashboxes to transact with multiple deliverymen</p>
 				</div>
 			</div>
 		</div>
@@ -229,7 +229,7 @@
 					<div class="grid items-center justify-center gap-4">
 						<h4>“Kuya, iwan mo nalang sa BerdeBox.”</h4>
 						<p class="">
-							Take control of your package reception. Pre-order your BerdeBox today and get a free cashbox module.
+							Take control of your online deliveries. Pre-order your BerdeBox today and get a free cashbox module.
 						</p>
 					</div>
 					
