@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	export let isEnd: boolean = false;
 	export let initialY: number;
 	export let scrollY: number;
 	export let duration: number;
 	export let images: string[];
+	export let frameCount: number;
+	
 
 	let section: HTMLElement;
-	let canvas: HTMLCanvasElement;
+	export let canvas: HTMLCanvasElement;
 	let imageSources: HTMLImageElement[] = [];
 
 	function loadImages() {
@@ -72,13 +75,21 @@
 			const progress = scrollTop / contentHeight;
 			const frame = Math.max(0, Math.min(images.length - 1, Math.floor(progress * images.length)));
 			drawImage(frame);
-		}
 
-		console.log(netScrollY);
+			console.log("HERE", scrollY, duration)
+			if (scrollY >= duration/2){
+				isEnd = true;
+			}  else{
+				isEnd = false;
+			}
+		} else {
+			isEnd = true;
+
+		}
 	}
 </script>
 
-<section bind:this={section} style="--duration: {duration || 100}vh;">
+<section bind:this={section} style="--duration: {duration}px;">
 	<canvas class="h-auto" bind:this={canvas} />
 </section>
 

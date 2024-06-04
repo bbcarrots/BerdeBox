@@ -2,13 +2,14 @@
 	import Nav from '$lib/components/landing/Nav.svelte';
 	import Footer from '$lib/components/landing/Footer.svelte';
 	import ImageSequence from '$lib/components/landing/ImageSequence.svelte';
-	import TextSequence from '$lib/components/landing/TextSequence_old.svelte';
 	import { cubicOut } from 'svelte/easing';
 	import FeatureCard from '$lib/components/landing/FeatureCard.svelte';
+	import { onMount } from 'svelte';
 
+	let isEnd: boolean;
 	let scrollY: number;
 
-	const framesIntro = 61;
+	const framesIntro = 60;
 	const framesModules = 25;
 
 	// Animation
@@ -46,23 +47,60 @@
 		const t = Math.min(1, Math.max(scrollY / fadeDistance, 0.2));
 		return cubicOut(1 - t);
 	};
+
+	// INTRO
+	let introElement: HTMLElement;
+	let introText: any;
+	let canvasElement: HTMLCanvasElement;
+	let introCanvasHeight: any;
+
+	let cashboxCanvasElement: HTMLCanvasElement;
+	let uvboxCanvasElement: HTMLCanvasElement;
+	let solarCanvasElement: HTMLCanvasElement;
+
+	onMount(() => {
+		introText = introElement.getBoundingClientRect();
+
+		console.log(introText.top, introText.right, introText.bottom, introText.left);
+	})
+
+	$: {
+		console.log(typeof window, introElement)
+		if (typeof window !== 'undefined' && introElement && scrollY) {
+			introText = introElement.getBoundingClientRect();
+			introCanvasHeight = canvasElement.getBoundingClientRect().height
+			console.log("duration", introCanvasHeight)
+
+			console.log(introText.top, introText.right, introText.bottom, introText.left);
+		}
+	}
+	
 </script>
 
 <svelte:window bind:scrollY />
 
 <Nav {scrollY}/>
+
 <body>
-	<div class="bg-white flex flex-col items-center">
+	<div class="relative bg-white flex flex-col items-center w-full">
 		<!-- INTRO -->
 		<div class="relative w-full bg-white">
-			<div class="">
-				<section class="full-screen" style="opacity: {calculateOpacity(scrollY, 250)}" />
-				<ImageSequence initialY={0} {scrollY} duration={220} images={intro} />
+			<div bind:this={introElement} 
+				class={ isEnd ? "z-50 w-full" : "fixed top-[30%] z-50 w-full"}
+				style={ isEnd ? `position: absolute; top: ${introText.top + scrollY}px; left: ${introText.left}px; right: ${introText.right}px; bottom: ${introText.bottom + scrollY}px; z-index: 50; width: 100%;` : ''}
+			>
+				<div class="grid text-bb-black gap-[27px] text-content animate-fade-in text-center">
+					<h1 class="text-[121px] animate-gradient">BerdeBox</h1>
+					<h5 class="text-[25.25px] pt-[10px] text-bb-dark-green/[.8]">Receive packages securely from anywhere, anytime</h5>
+					<div class="flex gap-4">
+					</div>
+				</div>
 			</div>
-			<TextSequence {scrollY} textFrames={text} />
+			<div class="relative z-40">
+				<section class="full-screen" style="opacity: {calculateOpacity(scrollY, 250)}" />
+				<ImageSequence bind:canvas={canvasElement} frameCount={framesIntro} bind:isEnd initialY={0} {scrollY} duration={2*introCanvasHeight} images={intro} />
+			</div>
 		</div>
-
-
 
 		<!-- FEATURES -->
 		<!-- header -->
@@ -122,7 +160,7 @@
 		<!-- CASHBOX MODULE -->
 		<div class="relative w-full h-[70vh]">
 			<div class="absolute max-w-[60%]">
-				<ImageSequence initialY={3600} {scrollY} duration={60} images={cashbox} />
+				<ImageSequence bind:canvas={cashboxCanvasElement} frameCount={framesModules} initialY={3600} {scrollY} duration={60} images={cashbox} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
@@ -136,7 +174,7 @@
 		<!-- UV LIGHT MODULE -->
 		<div class="relative w-full h-[70vh]">
 			<div class="absolute max-w-[60%]">
-				<ImageSequence initialY={4400} {scrollY} duration={60} images={uvlight} />
+				<ImageSequence bind:canvas={uvboxCanvasElement} frameCount={framesModules} initialY={4400} {scrollY} duration={60} images={uvlight} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
@@ -150,7 +188,7 @@
 		<!-- Solar Panel -->
 		<div class="relative w-full h-[70vh]">
 			<div class="absolute max-w-[60%]">
-				<ImageSequence initialY={5300} {scrollY} duration={60} images={solarPanel} />
+				<ImageSequence bind:canvas={solarCanvasElement} frameCount={framesModules} initialY={5300} {scrollY} duration={60} images={solarPanel} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
@@ -228,4 +266,48 @@
                 background-position: 100% 50%;
             }
         }
+
+			@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	.animate-fade-in {
+		animation: fadeIn 0.5s ease-in-out forwards;
+	}
+
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	.animate-fade-out {
+		animation: fadeOut 0.5s ease-in-out forwards;
+	}
+
+	@keyframes gradient-move {
+        0% {
+            background-position: 0% 50%;
+        }
+        100% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .animate-gradient {
+        background: linear-gradient(270deg, #557760, #304336, #557760, #304336);
+        background-size: 200% 200%;
+        animation: gradient-move 12s ease infinite;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+		opacity: 0.8;
+	}
 </style>
