@@ -77,14 +77,13 @@
 			drawImage(frame);
 
 			console.log("HERE", scrollY, duration)
-			if (scrollY >= duration/2){
+			if (netScrollY >= initialY + duration/2){
 				isEnd = true;
 			}  else{
 				isEnd = false;
 			}
 		} else {
 			isEnd = true;
-
 		}
 	}
 </script>

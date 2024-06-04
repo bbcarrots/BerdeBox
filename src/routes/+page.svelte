@@ -9,6 +9,14 @@
 	let isEnd: boolean;
 	let scrollY: number;
 
+	let cashboxElement: HTMLElement;
+	let uvboxElement: HTMLElement;
+	let solarElement: HTMLElement;
+
+	let cashboxInitialY: number = 0;
+	let uvboxInitialY: number = 0;
+	let solarInitialY: number = 0;
+
 	const framesIntro = 30;
 	const framesModules = 12;
 
@@ -57,6 +65,9 @@
 	let introText: any;
 	let canvasElement: HTMLCanvasElement;
 	let introCanvasHeight: any;
+	let cashboxCanvasHeight: any;
+	let uvboxCanvasHeight: any;
+	let solarCanvasHeight: any;
 
 	let cashboxCanvasElement: HTMLCanvasElement;
 	let uvboxCanvasElement: HTMLCanvasElement;
@@ -72,10 +83,17 @@
 		console.log(typeof window, introElement)
 		if (typeof window !== 'undefined' && introElement && scrollY) {
 			introText = introElement.getBoundingClientRect();
-			introCanvasHeight = canvasElement.getBoundingClientRect().height
+			introCanvasHeight = canvasElement.getBoundingClientRect().height;
 			console.log("duration", introCanvasHeight)
 
 			console.log(introText.top, introText.right, introText.bottom, introText.left);
+			// Update initialY values for modules
+			cashboxCanvasHeight = cashboxElement.getBoundingClientRect().height - 30;
+			uvboxCanvasHeight = uvboxElement.getBoundingClientRect().height - 30;
+			solarCanvasHeight = cashboxElement.getBoundingClientRect().height - 30;
+			cashboxInitialY = cashboxElement.getBoundingClientRect().top + scrollY - cashboxCanvasHeight;
+			uvboxInitialY = uvboxElement.getBoundingClientRect().top + scrollY - uvboxCanvasHeight;
+			solarInitialY = solarElement.getBoundingClientRect().top + scrollY - solarCanvasHeight;
 		}
 	}
 	
@@ -162,9 +180,9 @@
 		</div>
 
 		<!-- CASHBOX MODULE -->
-		<div class="relative w-full h-[70vh]">
+		<div class="relative w-full h-[70vh]" bind:this={cashboxElement}>
 			<div class="absolute max-w-[60%]">
-				<ImageSequence bind:canvas={cashboxCanvasElement} frameCount={framesModules} initialY={3600} {scrollY} duration={60} images={cashbox} />
+				<ImageSequence bind:canvas={cashboxCanvasElement} frameCount={framesModules} initialY={cashboxInitialY} {scrollY} duration={cashboxCanvasHeight} images={cashbox} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
@@ -176,9 +194,9 @@
 		</div>
 
 		<!-- UV LIGHT MODULE -->
-		<div class="relative w-full h-[70vh]">
+		<div class="relative w-full h-[70vh]" bind:this={uvboxElement}>
 			<div class="absolute max-w-[60%]">
-				<ImageSequence bind:canvas={uvboxCanvasElement} frameCount={framesModules} initialY={4400} {scrollY} duration={60} images={uvlight} />
+				<ImageSequence bind:canvas={uvboxCanvasElement} frameCount={framesModules} initialY={uvboxInitialY} {scrollY} duration={uvboxCanvasHeight} images={uvlight} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
@@ -190,9 +208,9 @@
 		</div>
 
 		<!-- Solar Panel -->
-		<div class="relative w-full h-[70vh]">
+		<div class="relative w-full h-[70vh]" bind:this={solarElement}>
 			<div class="absolute max-w-[60%]">
-				<ImageSequence bind:canvas={solarCanvasElement} frameCount={framesModules} initialY={5300} {scrollY} duration={60} images={solarPanel} />
+				<ImageSequence bind:canvas={solarCanvasElement} frameCount={framesModules} initialY={solarInitialY} {scrollY} duration={solarCanvasHeight} images={solarPanel} />
 			</div>
 			<div class="absolute w-full h-[50vh] items-center grid grid-cols-2 z-50 text-bb-black">
 				<div />
