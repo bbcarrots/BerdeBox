@@ -131,7 +131,7 @@
 	async function subscribeTokenToTopic(token: string, topic: string) {
 		const payload = { registrationToken: token, topic: topic };
 		console.log('sub payload', payload);
-		const response = await fetch('../../api/topics/subscribe', {
+		const response = await fetch('../../app/api/topics/subscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -145,7 +145,7 @@
 		const payload = { registrationToken: token, topic: topic };
 		console.log('unsub payload', payload);
 
-		const response = await fetch('../../api/topics/unsubscribe', {
+		const response = await fetch('../../app/api/topics/unsubscribe', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -160,7 +160,6 @@
 
 		// if the notifs were permitted,
 		if (value) {
-			console.log('unsubscribing', $UserStore.notifToken);
 			// update the user store to set it to false
 			await updateUserStore('');
 			// unsubscribe to the topic
@@ -169,7 +168,6 @@
 		}
 		// if the notifs were not permitted
 		else {
-			console.log('subscribing', $UserStore.notifToken, loading);
 			// check if permissions have been granted
 			// check permissions already checks if the permissions have been granted
 			await checkPermissions(true);

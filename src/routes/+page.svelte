@@ -5,6 +5,8 @@
 	import { cubicOut } from 'svelte/easing';
 	import FeatureCard from '$lib/components/landing/FeatureCard.svelte';
 	import { onMount } from 'svelte';
+	import '../landing.css';
+
 
 	let isEnd: boolean;
 	let scrollY: number;
