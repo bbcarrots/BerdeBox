@@ -10,36 +10,40 @@
 	let holding: boolean = false; // Variable to track if button is being held down
 	const dispatch = createEventDispatcher();
 
+	// Functions to handle desktop
+	// -----------------------------------------------------
 	function handleMouseDown() {
-		holding = true; // Button is being held down
+		holding = true; 
 		timer = setTimeout(() => {
 			dispatch('held');
-			holding = false; // Button is released
+			holding = false; 
 			open = true;
 		}, 2000);
 	}
 
 	function handleMouseUp() {
 		clearTimeout(timer);
-		holding = false; // Button is released
+		holding = false; 
 	}
 
+	// Functions to handle mobile touch
+	// -----------------------------------------------------
 	function handleTouchStart() {
-		holding = true; // Button is being held down
+		holding = true; 
 		timer = setTimeout(() => {
 			dispatch('held');
-			holding = false; // Button is released
+			holding = false; 
 			open = true;
 		}, 2000);
 	}
 
 	function handleTouchEnd() {
 		clearTimeout(timer);
-		holding = false; // Button is released
+		holding = false; 
 	}
 
+	// -----------------------------------------------------
 	onDestroy(() => {
-		// Ensure to clear the timer when the component is destroyed
 		clearTimeout(timer);
 	});
 

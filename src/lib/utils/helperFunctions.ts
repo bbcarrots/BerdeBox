@@ -23,17 +23,4 @@ export function getMessage(status: string, action: string) {
 			return `Invalid action format: ${action}`;
 		}
 	}
-	return '';
-}
-
-export function checkPermissions() {
-	if (window.Notification) {
-		if (Notification.permission === 'granted') {
-		} else if (Notification.permission !== 'denied') {
-			Notification.requestPermission((permission) => {
-				if (permission === 'granted') {
-				}
-			});
-		}
-	}
 }

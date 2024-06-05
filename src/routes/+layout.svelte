@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '../landing.css';
 	let scrollY: number;
 </script>
 

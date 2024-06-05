@@ -103,7 +103,7 @@
 		const payload = { boxCode: 'berdebox' + $page.params.boxID.toString() };
 
 		// console.log('Main Lock should be open!');
-		const response = await fetch('../../api/output/mainlock', {
+		const response = await fetch('../../app/api/output/mainlock', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -127,7 +127,7 @@
 		};
 
 		// console.log('Cash Box Lock should be open!');
-		const response = await fetch('../../api/output/cashbox', {
+		const response = await fetch('../../app/api/output/cashbox', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {

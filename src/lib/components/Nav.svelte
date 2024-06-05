@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Icon, Cog8Tooth, ChevronRight } from 'svelte-hero-icons';
 	import { page } from '$app/stores';
 	import ProfilePhoto from './ProfilePhoto.svelte';
 
