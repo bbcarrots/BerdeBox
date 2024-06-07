@@ -70,7 +70,10 @@
 	async function handleDoorbell(snapshot: any) {
 		if (snapshot.val()) {
 			isDoorbellRung = true;
-			update(ref($firebaseDBFront, 'berdebox1/output'), { take_photo: true, take_photo_command: 1 });
+			update(ref($firebaseDBFront, 'berdebox1/output'), {
+				take_photo: true,
+				take_photo_command: 1
+			});
 			await asyncTimeout(2000);
 			update(ref($firebaseDBFront, 'berdebox1/input'), { doorbell_button_is_pressed: false });
 		}
