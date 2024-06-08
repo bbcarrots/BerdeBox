@@ -271,7 +271,7 @@
 
 		<!-- CALL TO ACTION -->
 		<div
-			class="relative flex max-[1200px]:flex-col min-[1200px]:grid min-[1200px]:grid-cols-2 w-[90%] items-center justify-center gap-4 bg-[#F8F8F8] mt-40 rounded-[25px] overflow-hidden z-50"
+			class="relative flex max-[1200px]:flex-col min-[1200px]:grid min-[1200px]:grid-cols-2 w-[90%] items-center justify-center gap-4 bg-[#F8F8F8] mt-40 rounded-[25px] overflow-hidden z-40"
 		>
 			<!-- Text -->
 			<div>
